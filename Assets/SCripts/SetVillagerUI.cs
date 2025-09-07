@@ -12,6 +12,8 @@ public class SetVillagerUI : MonoBehaviour
     public TMP_Text buildSkill_Txt;
     public TMP_Text gatherSkill_Txt;
 
+    public TMP_Text hunger_Txt;
+
     public TMP_Dropdown roleDropdown;
     public TMP_Text State_Txt;
 
@@ -46,9 +48,10 @@ public class SetVillagerUI : MonoBehaviour
         buildSkill_Txt.text = villager.skills[VillagerSkills.Build].ToString();
         gatherSkill_Txt.text = villager.skills[VillagerSkills.Gather].ToString();
 
+        hunger_Txt.text = villager.hunger.ToString();
 
         health_Txt.text = villager.health.ToString();
-        State_Txt.text = villager.role.ToString();
+        State_Txt.text = villager.GetComponent<VillagerAI>().role.ToString();
 
     }
 
