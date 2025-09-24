@@ -563,6 +563,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isSick: 0
   happiness: 100
+  mood: 4
   gatherType: food
   role: 0
   hunger: 100
@@ -575,6 +576,12 @@ MonoBehaviour:
   energy: 100
   recoveryRate: 1
   wakeUpChance: 0
+  failedTaskRecently: 0
+  completedTaskRecently: 0
+  sleptRecently: 0
+  socialisedRecently: 0
+  hasEatenRecently: 0
+  wasPickedupRecently: 0
   startingSkills: 01000000010000000100000001000000
   skillLearnModifier: 01000000010000000100000001000000
 --- !u!70 &91988696
@@ -840,6 +847,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isSick: 0
   happiness: 100
+  mood: 4
   gatherType: food
   role: 0
   hunger: 100
@@ -852,6 +860,12 @@ MonoBehaviour:
   energy: 100
   recoveryRate: 1
   wakeUpChance: 0
+  failedTaskRecently: 0
+  completedTaskRecently: 0
+  sleptRecently: 0
+  socialisedRecently: 0
+  hasEatenRecently: 0
+  wasPickedupRecently: 0
   startingSkills: 01000000010000000100000001000000
   skillLearnModifier: 01000000010000000100000001000000
 --- !u!70 &156904134
@@ -1396,6 +1410,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isSick: 0
   happiness: 100
+  mood: 4
   gatherType: food
   role: 0
   hunger: 100
@@ -1408,6 +1423,12 @@ MonoBehaviour:
   energy: 100
   recoveryRate: 1
   wakeUpChance: 0
+  failedTaskRecently: 0
+  completedTaskRecently: 0
+  sleptRecently: 0
+  socialisedRecently: 0
+  hasEatenRecently: 0
+  wasPickedupRecently: 0
   startingSkills: 01000000010000000100000001000000
   skillLearnModifier: 01000000010000000100000001000000
 --- !u!70 &380538426
@@ -2352,6 +2373,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isSick: 0
   happiness: 100
+  mood: 4
   gatherType: food
   role: 8
   hunger: 49
@@ -2364,6 +2386,12 @@ MonoBehaviour:
   energy: 10
   recoveryRate: 1
   wakeUpChance: 0
+  failedTaskRecently: 0
+  completedTaskRecently: 0
+  sleptRecently: 0
+  socialisedRecently: 0
+  hasEatenRecently: 0
+  wasPickedupRecently: 0
   startingSkills: 01000000010000000a00000001000000
   skillLearnModifier: 01000000010000000100000001000000
 --- !u!70 &588376718
@@ -2797,6 +2825,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isSick: 1
   happiness: 100
+  mood: 4
   gatherType: food
   role: 1
   hunger: 49
@@ -2809,6 +2838,12 @@ MonoBehaviour:
   energy: 100
   recoveryRate: 1
   wakeUpChance: 0
+  failedTaskRecently: 0
+  completedTaskRecently: 0
+  sleptRecently: 0
+  socialisedRecently: 0
+  hasEatenRecently: 0
+  wasPickedupRecently: 0
   startingSkills: 01000000010000000a00000001000000
   skillLearnModifier: 01000000010000000100000001000000
 --- !u!70 &685611482
@@ -5157,6 +5192,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isSick: 0
   happiness: 100
+  mood: 4
   gatherType: food
   role: 0
   hunger: 100
@@ -5169,6 +5205,12 @@ MonoBehaviour:
   energy: 100
   recoveryRate: 1
   wakeUpChance: 0
+  failedTaskRecently: 0
+  completedTaskRecently: 0
+  sleptRecently: 0
+  socialisedRecently: 0
+  hasEatenRecently: 0
+  wasPickedupRecently: 0
   startingSkills: 01000000010000000100000001000000
   skillLearnModifier: 01000000010000000100000001000000
 --- !u!114 &1105336588
@@ -5622,6 +5664,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isSick: 0
   happiness: 100
+  mood: 4
   gatherType: food
   role: 0
   hunger: 100
@@ -5634,6 +5677,12 @@ MonoBehaviour:
   energy: 100
   recoveryRate: 1
   wakeUpChance: 0
+  failedTaskRecently: 0
+  completedTaskRecently: 0
+  sleptRecently: 0
+  socialisedRecently: 0
+  hasEatenRecently: 0
+  wasPickedupRecently: 0
   startingSkills: 01000000010000000100000001000000
   skillLearnModifier: 01000000010000000100000001000000
 --- !u!70 &1240170792
@@ -5934,6 +5983,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4c122898c499d64d972936dc74268ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  villagerBaseSpeed: 0.5
   villagerCount: 2
   foodCount: 100
   lumberCount: 0
@@ -6080,6 +6130,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isSick: 0
   happiness: 100
+  mood: 4
   gatherType: lumber
   role: 0
   hunger: 100
@@ -6092,6 +6143,12 @@ MonoBehaviour:
   energy: 100
   recoveryRate: 1
   wakeUpChance: 0
+  failedTaskRecently: 0
+  completedTaskRecently: 0
+  sleptRecently: 0
+  socialisedRecently: 0
+  hasEatenRecently: 0
+  wasPickedupRecently: 0
   startingSkills: 02000000010000000100000001000000
   skillLearnModifier: 01000000010000000100000001000000
 --- !u!70 &1293423807
