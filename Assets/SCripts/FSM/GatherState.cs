@@ -2,26 +2,18 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class GatherState : IVillagerState
+public class GatherState : VillagerStateBase
 {
-    private VillagerAI villager;
     private GatherObj targetNode;
     private float carryingResource;
 
     public bool holdingResources = false;
 
-    public string gatherType;
-
     private Transform currentMoveLocation;
 
-    public GatherState(VillagerAI villager) { this.villager = villager; }
+    public GatherState(VillagerAI villager) : base(villager) { }
 
-    public void Enter()
-    {
-        StartGathering();
-    }
-
-    public void StartGathering()
+    public override void Enter()
     {
         StartNextGather();
     }
@@ -46,9 +38,9 @@ public class GatherState : IVillagerState
         carryingResource = 0;
         holdingResources = false;
 
-        MoveTo(currentMoveLocation.position);
+        villager.MoveTo(currentMoveLocation.position);
     }
-    public void Execute()
+    public override void Execute()
     {
         // Check if we reached destination
         if (villager.agent.enabled && currentMoveLocation != null && !villager.agent.pathPending && villager.agent.remainingDistance <= Mathf.Max(villager.agent.stoppingDistance, villager.reachThreshold))
@@ -66,14 +58,6 @@ public class GatherState : IVillagerState
         }
     }
 
-    private void MoveTo(Vector3 pos)
-    {
-        if (NavMesh.SamplePosition(pos, out NavMeshHit hit, 2f, NavMesh.AllAreas))
-        {
-            villager.agent.SetDestination(hit.position);
-            villager.agent.isStopped = false;
-        }
-    }
     private IEnumerator GatherResource()
     {
         villager.agent.isStopped = true; // pause agent while gathering
@@ -125,14 +109,5 @@ public class GatherState : IVillagerState
 
         // loop back to next resource
         StartNextGather();
-    }
-
-    public void Exit() {
-
-    }
-
-    public void OnDropped()
-    {
-        MoveTo(currentMoveLocation.position);
     }
 }

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ResourceObj : MonoBehaviour
+public class ResourceObj : MonoBehaviour, IRoleInteractable
 {
     [Header("Gather Settings")]
     public string resourceType = "food";
@@ -23,6 +23,20 @@ public class ResourceObj : MonoBehaviour
     public void incrementResource(float resourceAmount)
     {
         currentAmount += resourceAmount;
+    }
+
+    public void OnVillagerDropped(VillagerAI villager)
+    {
+        if (resourceType == "food")
+            villager.SetRole(Villager_Role.Eat);
+
+        else if (resourceType == "lumber")
+            villager.SetRole(Villager_Role.Build);
+
+        else if (resourceType == "research")
+            villager.SetRole(Villager_Role.Research);
+        else
+            Debug.Log("Incorrect resource type. Must be one of 'food' or 'lumber' or 'research'");
     }
 
     private void Update()

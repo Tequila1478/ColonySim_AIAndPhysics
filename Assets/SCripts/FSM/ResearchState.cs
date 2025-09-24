@@ -1,10 +1,8 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class ResearchState : IVillagerState
+public class ResearchState : VillagerStateBase
 {
-    private VillagerAI villager;
-
     public ResearchObj table;
     public ResourceObj researchDropOffLocation;
 
@@ -12,13 +10,10 @@ public class ResearchState : IVillagerState
 
     public float researchCarried;
 
-    public ResearchState(VillagerAI villager)
-    {
-        this.villager = villager;
-    }
+    public ResearchState(VillagerAI villager) : base(villager) { }
 
 
-    public void Enter()
+    public override void Enter()
     {
         if (VillageData.Instance.researchTable == null || VillageData.Instance.ResearchDropOffLocation == null)
         {
@@ -34,12 +29,12 @@ public class ResearchState : IVillagerState
         StartMoveTo(table.gameObject);
     }
 
-    public void Execute()
+    public override void Execute()
     {
         currentSubState?.Execute();
     }
 
-    public void Exit()
+    public override void Exit()
     {
         currentSubState?.Exit();
     }
@@ -65,10 +60,12 @@ public class ResearchState : IVillagerState
         SwitchSubState(new Research_DeliverResearchState(this, villager, researchDropOffLocation, ref researchCarried));
     }
 
-    public void OnDropped()
+    public override void OnDropped()
     {
-        StartMoveTo(table.gameObject);
+        currentSubState?.Exit();
+        villager.SetRole(villager.villagerData.GetRandomRole());
     }
+
 }
 
 

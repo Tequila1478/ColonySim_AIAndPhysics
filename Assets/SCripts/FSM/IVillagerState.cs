@@ -5,5 +5,5 @@ public interface IVillagerState
     void Execute();
     void Exit();
 
-    void OnDropped();
+    //void OnDropped();
 }

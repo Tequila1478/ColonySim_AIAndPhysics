@@ -64,10 +64,9 @@ public class VillagerDragHandler : MonoBehaviour
             heldVillager = selectedVillager.GetComponent<Villager>();
             selectedAgent = selectedVillager.GetComponent<NavMeshAgent>();
 
-
-
-
             offset = selectedVillager.transform.position - (Vector3)worldPos;
+            VillagerAI villagerAI = selectedVillager.GetComponent<VillagerAI>();
+            villagerAI.fsm.OnPickup();
         }
     }
 
@@ -80,7 +79,7 @@ public class VillagerDragHandler : MonoBehaviour
                 selectedAgent.enabled = true;
                 selectedVillager.GetComponent<VillagerAI>().ApplyRole(selectedVillager.GetComponent<VillagerAI>().role);
                 selectedAgent.Warp(selectedVillager.transform.position);
-                selectedAgent.ResetPath();
+                //selectedAgent.ResetPath();
 
                 selectedVillager.GetComponent<VillagerAI>().fsm.OnDropped();
             }

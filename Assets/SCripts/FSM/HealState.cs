@@ -1,64 +1,57 @@
+﻿using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UIElements.Experimental;
 
-public class HealState : IVillagerState
+public class HealState : VillagerStateBase
 {
-    private VillagerAI villager;
     private Villager target;
-
-    private float healDuration;   // how long it takes to heal
+    private float healDuration;
     private float healTimer;
     private bool isHealing = false;
 
-    public HealState(VillagerAI villager)
-    {
-        this.villager = villager;
-    }
+    public HealState(VillagerAI villager) : base(villager) { }
 
-    public void Enter()
+    public override void Enter()
     {
-        villager.agent.enabled = true;
-        villager.agent.isStopped = false;
-
-        // Pick a sick villager to heal
+        Debug.Log("Finding villager to heal");
         target = VillageData.Instance.GetSickVillager();
+
         if (target == null)
         {
-            Debug.Log("No sick villagers available");
             villager.SetRole(Villager_Role.Wander);
             return;
         }
 
-        // Compute heal duration based on healer's skill
+        // Mark as being healed
+        target.GetComponent<VillagerAI>().isBeingHealed = true;
+
+        // Compute heal duration
         float skillLevel = villager.villagerData.GetSkill(VillagerSkills.Heal);
-        healDuration = VillageData.Instance.healTime / VillageData.Instance.GetSkillEffect(skillLevel);
+        healDuration = VillageData.Instance.hospitalObj.healDuration / VillageData.Instance.GetSkillEffect(skillLevel);
 
-        // Mark the target as being healed
-        target.GetComponent<VillagerAI>().SetRole(Villager_Role.BeingHealed);
-
-        // Move towards the target
-        villager.agent.SetDestination(target.transform.position);
+        // Start moving to target
+        villager.agent.isStopped = false;
+        villager.MoveTo(target.transform.position);
         isHealing = false;
     }
 
-    public void Execute()
+    public override void Execute()
     {
         if (target == null)
         {
             villager.SetRole(Villager_Role.Wander);
             return;
         }
-
-        // If healing hasn't started yet, move to the target
+        // Update destination if target moves
         if (!isHealing)
         {
-            // Continuously update destination in case target moves
-            villager.agent.SetDestination(target.transform.position);
+            villager.MoveTo(target.transform.position);
 
             if (!villager.agent.pathPending &&
                 villager.agent.remainingDistance <= villager.reachThreshold)
             {
-                // Arrived at target
+                // Arrived → start healing
                 villager.agent.isStopped = true;
                 healTimer = healDuration;
                 isHealing = true;
@@ -77,25 +70,50 @@ public class HealState : IVillagerState
 
     private void FinishHealing()
     {
-        if (target != null)
-        {
-            target.IncrementHealth(VillageData.Instance.healAmount);
-            //target.GetComponent<VillagerAI>().SetRole(Villager_Role.Wander); // Reset target's role
-        }
+        Debug.Log("Healing finished");
+            target.IncrementHealth(VillageData.Instance.hospitalObj.healAmount);
+            target.GetComponent<VillagerAI>().isBeingHealed = false;
+            target.isSick = false;
 
         villager.SetRole(Villager_Role.Wander); // Reset healer's role
     }
 
-    public void Exit()
+    public override void Exit()
     {
         villager.agent.isStopped = false;
         isHealing = false;
         target = null;
     }
 
-    public void OnDropped()
+    public override void OnDropped()
     {
-        // Restart moving to target if villager is dropped
-        Enter();
+        if (target != null)
+        {
+            var targetAI = target.GetComponent<VillagerAI>();
+            if (targetAI != null)
+            {
+                targetAI.isBeingHealed = false;
+                targetAI.villagerData.isSick = true; // still sick if interrupted
+                targetAI.SetRole(Villager_Role.Sick);
+            }
+        }
+
+        // Exit the healer from HealState and pick a new random role
+        villager.SetRole(villager.villagerData.GetRandomRole());
     }
+
+    public override void OnPickUp()
+    {
+        if (target != null)
+        {
+            var targetAI = target.GetComponent<VillagerAI>();
+            if (targetAI != null)
+            {
+                targetAI.isBeingHealed = false;
+                targetAI.villagerData.isSick = true; // still sick if interrupted
+                targetAI.SetRole(Villager_Role.Sick);
+            }
+        }
+        villager.fsm.ChangeState(new PickupState(villager));
+    } 
 }

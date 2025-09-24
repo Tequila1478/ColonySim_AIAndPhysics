@@ -1,29 +1,18 @@
 using UnityEngine;
 
-public class DeadState : IVillagerState
+public class DeadState : VillagerStateBase
 {
-    private VillagerAI villager;
-    public DeadState(VillagerAI villager) { this.villager = villager; }
+    public DeadState(VillagerAI villager) : base(villager) { }
 
-    public void Enter()
+    public override void Enter()
     {
         villager.agent.enabled = false;
 
     }
 
-    public void Execute()
+    public override void OnDropped()
     {
-        //throw new System.NotImplementedException();
-    }
-
-    public void Exit()
-    {
-       //throw new System.NotImplementedException();
-    }
-
-    public void OnDropped()
-    {
-        //throw new System.NotImplementedException();
+        //Doesn't change state, stays in this one instead
     }
 
 }

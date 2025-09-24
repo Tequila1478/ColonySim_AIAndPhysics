@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ResearchObj : MonoBehaviour
+public class ResearchObj : MonoBehaviour, IRoleInteractable
 {
     [Header("Research Settings")]
     public float researchTime = 60f;
@@ -28,6 +28,20 @@ public class ResearchObj : MonoBehaviour
         {
             Debug.Log("Help");// fallback: just use table position if no collider
             tableMinX = tableMaxX = transform.position;
+        }
+    }
+
+    public void OnVillagerDropped(VillagerAI villager)
+    {
+        villager.SetRole(Villager_Role.Research);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Villager"))
+        {
+            VillagerAI villager = collision.gameObject.GetComponent<VillagerAI>();
+            villager.SetRole(Villager_Role.Research);
         }
     }
 }

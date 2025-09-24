@@ -2,9 +2,8 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EatState : IVillagerState
+public class EatState : VillagerStateBase
 {
-    private VillagerAI villager;
     private ResourceObj foodDepot;
     private float carryingResource;
 
@@ -13,14 +12,9 @@ public class EatState : IVillagerState
 
     private Transform currentMoveLocation;
 
-    public EatState(VillagerAI villager) { this.villager = villager; }
+    public EatState(VillagerAI villager) : base(villager) { }
 
-    public void Enter()
-    {
-        StartGathering();
-    }
-
-    public void StartGathering()
+    public override void Enter()
     {
         StartNextGather();
     }
@@ -32,9 +26,9 @@ public class EatState : IVillagerState
         currentMoveLocation = foodDepot.transform;
 
         
-        MoveTo(currentMoveLocation.position);
+        villager.MoveTo(currentMoveLocation.position);
     }
-    public void Execute()
+    public override void Execute()
     {
         // Check if we reached destination
         if (villager.agent.enabled && currentMoveLocation != null && !villager.agent.pathPending && villager.agent.remainingDistance <= Mathf.Max(villager.agent.stoppingDistance, villager.reachThreshold))
@@ -45,17 +39,8 @@ public class EatState : IVillagerState
         }
     }
 
-    private void MoveTo(Vector3 pos)
-    {
-        if (NavMesh.SamplePosition(pos, out NavMeshHit hit, 2f, NavMesh.AllAreas))
-        {
-            villager.agent.SetDestination(hit.position);
-            villager.agent.isStopped = false;
-        }
-    }
     private IEnumerator GatherResource()
     {
-        Debug.Log("eating food");
         villager.agent.isStopped = true; // pause agent while gathering
         // optional: play gather animation here
 
@@ -77,7 +62,6 @@ public class EatState : IVillagerState
 
             if(villager.villagerData.hunger >= 100)
             {
-                Debug.Log("Villager full");
                 if (villager.villagerData.isSick)
                 {
                     villager.SetRole(Villager_Role.Sick);
@@ -97,15 +81,4 @@ public class EatState : IVillagerState
         villager.agent.isStopped = false;
     }
 
-    
-    public void Exit()
-    {
-        villager.agent.enabled = true;
-        villager.agent.isStopped = false;
-    }
-
-    public void OnDropped()
-    {
-        MoveTo(currentMoveLocation.position);
-    }
 }

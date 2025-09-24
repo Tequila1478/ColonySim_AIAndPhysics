@@ -9,5 +9,6 @@ public enum Villager_Role
     Eat,
     Dead,
     Heal,
-    BeingHealed,z
+    Sleep,
+    PickedUp
 }

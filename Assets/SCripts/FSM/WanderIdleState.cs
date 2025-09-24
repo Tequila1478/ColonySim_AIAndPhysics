@@ -5,7 +5,13 @@ public class WanderIdleState : IVillagerState
     private VillagerAI villager;
     private float idleTime, timer;
 
-    public WanderIdleState(VillagerAI villager) { this.villager = villager; }
+    private WanderMoveState previousMoveState;
+
+    public WanderIdleState(VillagerAI villager, WanderMoveState moveState = null) 
+    { 
+        this.villager = villager; 
+        previousMoveState = moveState;
+    }
 
     public void Enter()
     {
@@ -26,13 +32,21 @@ public class WanderIdleState : IVillagerState
 
     private void PickNewState()
     {
-        villager.SetRole(villager.villagerData.GetRandomRole());
+        if (previousMoveState != null && previousMoveState.GetRepeatCount() < previousMoveState.GetMaxRepeats())
+        {
+           // villager.fsm.ChangeState(previousMoveState);
+        }
+        else
+        {
+            // Done: pick a new role
+            villager.SetRole(villager.villagerData.GetRandomRole());
+        }
     }
 
     public void Exit() { }
 
     public void OnDropped()
     {
-        villager.fsm.ChangeState(new WanderMoveState(villager));
+        //villager.fsm.ChangeState(new WanderMoveState(villager), villager);
     }
 }

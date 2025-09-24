@@ -1,9 +1,8 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class SickState : IVillagerState
+public class SickState : VillagerStateBase
 {
-    private VillagerAI villager;
     private Vector3 target;
     private float idleTimer;
     private bool isIdle;
@@ -14,18 +13,42 @@ public class SickState : IVillagerState
     private float maxIdleTime = 4f;
     private float reachThreshold = 0.4f;
 
-    public SickState(VillagerAI villager) { this.villager = villager; }
+    public SickState(VillagerAI villager) : base(villager) { }
 
-    public void Enter()
+    public override void Enter()
     {        
         SetNewDestination();
+        VillageData.Instance.AddSickVillager(villager.villagerData);
     }
 
-    public void Execute()
+    public override void Execute()
     {
+        //Debug.Log($"{villager.name} healing state: {villager.isBeingHealed}");
         if (villager.agent == null || !villager.agent.enabled) return;
 
-        // Check animator
+        // If villager is no longer sick, exit state
+        if (!villager.villagerData.isSick)
+        {
+            villager.SetRole(Villager_Role.Wander);
+            return;
+        }
+
+        // If being healed, stop moving
+        if (villager.isBeingHealed)
+        {
+            villager.agent.isStopped = true;
+            if (villager.animator != null)
+                villager.animator.SetBool("isMoving", false);
+            villager.GetComponent<SpriteRenderer>().color = Color.black;
+            return;
+        }
+        else
+        {
+            villager.agent.isStopped = false;
+            villager.GetComponent<SpriteRenderer>().color = Color.red;
+        }
+
+        // Normal wandering logic
         if (villager.animator != null)
             villager.animator.SetBool("isMoving", villager.agent.velocity.sqrMagnitude > 0.01f);
 
@@ -34,7 +57,6 @@ public class SickState : IVillagerState
             if (!villager.agent.pathPending &&
                 villager.agent.remainingDistance <= Mathf.Max(villager.agent.stoppingDistance, reachThreshold))
             {
-                // Arrived, start idle
                 idleTimer = Random.Range(minIdleTime, maxIdleTime);
                 isIdle = true;
             }
@@ -50,36 +72,21 @@ public class SickState : IVillagerState
         }
     }
 
-    public void Exit()
+    public override void Exit()
     {
-        // Clean up when leaving state (optional)
-    }
-
-    public void OnDropped()
-    {
-        SetNewDestination();
+        VillageData.Instance.RemoveSickVillager(villager.villagerData);
+        villager.agent.enabled = true;
+        villager.agent.isStopped = false;
     }
 
     private void SetNewDestination()
     {
-        if (VillageData.Instance.hospitalLocation == null) return;
-
-        Vector3 center = VillageData.Instance.hospitalLocation.transform.position;
-        for (int i = 0; i < 30; i++) // sample attempts
+        if (VillageData.Instance.hospitalObj == null) return;
+        if (villager.TryGetRandomNavMeshPoint(VillageData.Instance.hospitalObj.transform.position, 1f, out target))
         {
-            Vector3 randomPoint = center + Random.insideUnitSphere * wanderRadius;
-            randomPoint.y = center.y; // keep ground-level sampling
-
-            if (NavMesh.SamplePosition(randomPoint, out NavMeshHit hit, 2f, NavMesh.AllAreas))
-            {
-                target = hit.position;
-                villager.agent.SetDestination(target);
-                return;
-            }
+            villager.agent.SetDestination(target);
+            if (villager.animator != null)
+                villager.animator.SetBool(villager.moveBool, true);
         }
-
-        // fallback if no point found
-        target = center;
-        villager.agent.SetDestination(target);
     }
 }

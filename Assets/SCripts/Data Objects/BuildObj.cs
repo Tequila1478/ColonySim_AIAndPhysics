@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BuildObj : MonoBehaviour
+public class BuildObj : MonoBehaviour, IRoleInteractable
 {
     [Header("Build requirements")]
     public float buildTime = 20f;
@@ -19,4 +19,9 @@ public class BuildObj : MonoBehaviour
         }
     }
 
+    public void OnVillagerDropped(VillagerAI villager)
+    {
+        VillageData.Instance.currentBuilding = this;
+        villager.SetRole(Villager_Role.Build);
+    }
 }

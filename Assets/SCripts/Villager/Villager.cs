@@ -5,25 +5,8 @@ using UnityEngine.AI;
 
 public class Villager : MonoBehaviour
 {
-    [Header("Debug")]
-    [SerializeField] private bool debugSetSick;
-
-    private bool _isSick;
-
-    // Event fired when sickness changes to true
-    public event Action BecameSick;
-
-    public bool isSick
-    {
-        get => _isSick;
-        set
-        {
-            if (!_isSick && value) // only trigger when changing from false → true
-                BecameSick?.Invoke();
-
-            _isSick = value;
-        }
-    }
+    public bool isSick;
+    public float happiness = 100f;
 
     public string gatherType = "food";
     public Villager_Role role;
@@ -41,11 +24,9 @@ public class Villager : MonoBehaviour
 
     public float workChanceMultiplier = 1f;
 
-    private void Update()
-    {
-        if (debugSetSick != isSick)
-            isSick = debugSetSick;
-    }
+    public float energy = 100f;
+    public float recoveryRate = 1f;
+    public float wakeUpChance = 0f;
 
     void Start()
     {
@@ -68,20 +49,39 @@ public class Villager : MonoBehaviour
         if (health > 100)
             health = 100f;
 
-        if(health > 50)
+        if (incrementAmount < 0)
         {
-            isSick = false;
-        }
+            float chanceToGetSick = 0f;
 
-        if (health < 20)
-        {
-            isSick = true;
-        }
+            if (health > 50)
+            {
+                chanceToGetSick = 0.05f;
+            }
+            else if (health > 20)
+            {
+                chanceToGetSick = 0.5f;
+            }
+            else
+            {
+                chanceToGetSick = 1f;
+            }
 
-        if (health < 0)
-        {
-            health = 0;
-            isDead = true;
+            if (UnityEngine.Random.value < chanceToGetSick)
+            {
+                isSick = true;
+                GetComponent<VillagerAI>().OnBecomeSick();
+            }
+            else if (health > 50f)
+            {
+                // Healthy if above 50 and random check failed
+                isSick = false;
+            }
+
+            if (health < 0)
+            {
+                health = 0;
+                isDead = true;
+            }
         }
     }
 
@@ -155,10 +155,14 @@ public class Villager : MonoBehaviour
 
     public Villager_Role GetRandomRole()
     {
+        if (isSick)
+        {
+            return Villager_Role.Sick;
+        }
         // Step 1: Base wander weight (villagers will always have some chance to wander)
         float baseWanderWeight = 1f;
 
-        // Step 2: Compute average skill level
+        // Step 2: Get average skill level
         float totalSkill = 0f;
         foreach (var kv in skills)
             totalSkill += kv.Value;
@@ -171,7 +175,7 @@ public class Villager : MonoBehaviour
         float wanderWeight = baseWanderWeight + (10f / (1f + avgSkill));
         // tweak the 10f to control influence of skill on laziness
 
-        // Step 4: Compute total weight
+        // Step 4: Get total weight
         float totalWeight = wanderWeight;
         foreach (var kv in skills)
             totalWeight += SquashSkill(kv.Value);

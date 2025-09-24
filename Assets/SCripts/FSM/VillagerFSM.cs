@@ -2,9 +2,10 @@ using UnityEngine;
 
 public class VillagerFSM : MonoBehaviour
 {
-    public IVillagerState currentState;
+    public VillagerStateBase currentState;
+    public VillagerAI villager;
 
-    public void ChangeState(IVillagerState newState)
+    public void ChangeState(VillagerStateBase newState)
     {
         if (currentState != null)
             currentState.Exit();
@@ -25,5 +26,11 @@ public class VillagerFSM : MonoBehaviour
     {
         if (currentState != null)
             currentState.OnDropped();
+    }
+
+    public void OnPickup()
+    {
+        if (currentState != null)
+            currentState.OnPickUp();
     }
 }

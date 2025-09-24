@@ -2,10 +2,9 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class BuildState : IVillagerState
+public class BuildState : VillagerStateBase
 {
     private ResourceObj targetNode;
-    private VillagerAI villager;
     private BuildObj building;
 
     private float resourcesCarried;
@@ -13,12 +12,9 @@ public class BuildState : IVillagerState
 
     private Transform currentMoveLocation;
 
-    public BuildState(VillagerAI villager)
-    {
-        this.villager = villager;
-    }
+    public BuildState(VillagerAI villager) : base(villager) { }
 
-    public void Enter()
+    public override void Enter()
     {
         if (VillageData.Instance.lumberStores == null)
             Debug.LogWarning("No wood stores assigned!");
@@ -45,7 +41,7 @@ public class BuildState : IVillagerState
         resourcesCarried = 0;
 
         currentMoveLocation = targetNode.transform;
-        MoveTo(currentMoveLocation.position);
+        villager.MoveTo(currentMoveLocation.position);
     }
 
     private IEnumerator GatherWoodCoroutine()
@@ -71,7 +67,7 @@ public class BuildState : IVillagerState
 
         currentMoveLocation = building.transform;
         villager.agent.isStopped = false;
-        MoveTo(currentMoveLocation.position);
+        villager.MoveTo(currentMoveLocation.position);
 
         yield break;
     }
@@ -101,20 +97,7 @@ public class BuildState : IVillagerState
         yield break;
     }
 
-    private void MoveTo(Vector3 target)
-    {
-        NavMeshHit hit;
-        if (NavMesh.SamplePosition(target, out hit, 2f, NavMesh.AllAreas))
-        {
-            villager.agent.SetDestination(hit.position);
-        }
-        else
-        {
-            Debug.LogWarning("Target not on NavMesh: " + target);
-        }
-    }
-
-    public void Execute()
+    public override void Execute()
     {
         if (villager.agent.pathPending) return;
 
@@ -138,15 +121,5 @@ public class BuildState : IVillagerState
 
         return targetNode.gatherAmount * VillageData.Instance.GetSkillEffect(skillLevel);
 
-    }
-
-    public void Exit()
-    {
-        villager.agent.isStopped = false;
-    }
-
-    public void OnDropped()
-    {
-        MoveTo(currentMoveLocation.position);
     }
 }

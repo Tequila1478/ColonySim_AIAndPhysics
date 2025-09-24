@@ -30,23 +30,7 @@ public class VillagerAI : MonoBehaviour
     public float eatCooldown = 0;
 
     [Header("Sickness Settings")]
-    public bool isSick
-    {
-        get => _isSick;
-        set
-        {
-            if (!_isSick && value)
-            {
-                // Trigger logic for becoming sick
-                OnBecomeSick();
-            }
-            _isSick = value;
-
-            // Keep villagerData in sync
-            villagerData.isSick = _isSick;
-        }
-    }
-    private bool _isSick;
+    public bool isBeingHealed = false; 
 
     [HideInInspector] public NavMeshAgent agent;
     [HideInInspector] public VillagerFSM fsm;
@@ -66,16 +50,10 @@ public class VillagerAI : MonoBehaviour
 
         // Keep obstacle avoidance active
         agent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
-
-        villagerData.BecameSick += OnBecomeSick;
     }
 
-    void OnDestroy()
-    {
-        villagerData.BecameSick -= OnBecomeSick;
-    }
 
-    private void OnBecomeSick()
+    public void OnBecomeSick()
     {
         SetRole(Villager_Role.Sick);
     }
@@ -108,11 +86,10 @@ public class VillagerAI : MonoBehaviour
 
     public bool TryGetRandomNavMeshPoint(Vector3 center, float radius, out Vector3 result)
     {
-        for (int i = 0; i < sampleAttempts; i++)
+        for (int i = 0; i < 30; i++)
         {
-            Vector2 randomXZ = Random.insideUnitCircle * radius;
-            Vector3 randomPoint = new Vector3(center.x + randomXZ.x, center.y + 5f, center.z + randomXZ.y);
-            if (NavMesh.SamplePosition(randomPoint, out NavMeshHit hit, 10f, NavMesh.AllAreas))
+            Vector3 randomPoint = center + Random.insideUnitSphere * radius;
+            if (NavMesh.SamplePosition(randomPoint, out NavMeshHit hit, 2f, NavMesh.AllAreas))
             {
                 result = hit.position;
                 return true;
@@ -147,18 +124,21 @@ public class VillagerAI : MonoBehaviour
     public void SetRole(Villager_Role newRole)
     {
         role = newRole;
+        villagerData.role = newRole;
         // role change will be caught in Update
     }
 
     public void ApplyRole(Villager_Role newRole)
     {
+        villagerData.role = newRole;
+
         switch (newRole)
         {
             case Villager_Role.Wander:
-                fsm.ChangeState(new WanderIdleState(this));
+                fsm.ChangeState(new WanderState(this));
                 break;
             case Villager_Role.Sick:
-                fsm.ChangeState(new WanderIdleState(this));
+                fsm.ChangeState(new SickState(this));
                 break;
             case Villager_Role.Gather:
                 fsm.ChangeState(new GatherState(this));
@@ -176,10 +156,16 @@ public class VillagerAI : MonoBehaviour
                 fsm.ChangeState(new DeadState(this));
                 break;
             case Villager_Role.Heal:
-                fsm.ChangeState(new WanderIdleState(this));
+                fsm.ChangeState(new HealState(this));
+                break;
+            case Villager_Role.Sleep:
+                fsm.ChangeState(new SleepState(this));
+                break;
+            case Villager_Role.PickedUp:
+                fsm.ChangeState(new PickupState(this));
                 break;
             default:
-                fsm.ChangeState(new WanderIdleState(this));
+                fsm.ChangeState(new WanderState(this) );
                 break;
         }
         ChangeColour();
@@ -215,6 +201,12 @@ public class VillagerAI : MonoBehaviour
             case Villager_Role.Heal:
                 colour = Color.aquamarine;
                 break;
+            case Villager_Role.Sleep:
+                colour = Color.turquoise;
+                break;
+            case Villager_Role.PickedUp:
+                colour = Color.orange;
+                break;
             default:
                 colour = Color.black;
                 break;
@@ -223,13 +215,19 @@ public class VillagerAI : MonoBehaviour
         GetComponent<SpriteRenderer>().color = colour;
     }
 
-    public void StopMovingForHeal()
+    public bool MoveTo(Vector3 target)
     {
-
+        if (NavMesh.SamplePosition(target, out NavMeshHit hit, 2f, NavMesh.AllAreas))
+        {
+            agent.isStopped = false;
+            agent.SetDestination(hit.position);
+            return true;
+        }
+        else
+        {
+            Debug.LogWarning($"{name}: Target not on NavMesh: {target}");
+            return false;
+        }
     }
 
-    public void StartMovingAfterHeal()
-    {
-
-    }
 }

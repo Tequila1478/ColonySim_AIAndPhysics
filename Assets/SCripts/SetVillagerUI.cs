@@ -35,9 +35,11 @@ public class SetVillagerUI : MonoBehaviour
         foreach (var role in System.Enum.GetValues(typeof(Villager_Role)))
             options.Add(role.ToString());
         roleDropdown.AddOptions(options);
-
+        
         // Listen to changes
         roleDropdown.onValueChanged.AddListener(OnRoleChanged);
+
+        GetComponentInChildren<AutoHide>().gameObject.SetActive(false);
     }
 
     public void setSkillText(Villager villager)
@@ -52,6 +54,8 @@ public class SetVillagerUI : MonoBehaviour
 
         health_Txt.text = villager.health.ToString();
         State_Txt.text = villager.GetComponent<VillagerAI>().role.ToString();
+
+        roleDropdown.value = (int)villager.role;
 
     }
 

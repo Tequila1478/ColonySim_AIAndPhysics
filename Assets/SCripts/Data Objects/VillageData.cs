@@ -17,7 +17,6 @@ public class VillageData : MonoBehaviour
     [Header("Resource Drop off locations")]
     public ResourceObj lumberStores;
     public ResourceObj foodStores;
-    public Transform hospitalLocation;
     public ResourceObj ResearchDropOffLocation;
 
     [Header("All Resource Locations")]
@@ -29,11 +28,14 @@ public class VillageData : MonoBehaviour
     [Header("Active Construction Project")]
     public BuildObj currentBuilding;
 
-    [Header("Healing Settings")]
-    public float healTime = 20f;
-    public float healAmount = 20f;
+    public Dictionary<Villager, float> sickVillagers = new Dictionary<Villager, float>();
+    public Dictionary<Villager, float> wanderingVillagers = new Dictionary<Villager, float>();
 
-    public Dictionary<Villager, float> sickVillagers;
+    [Header("Bed settings")]
+    public BedObj[] allBeds;
+
+    [Header("healing Settings")]
+    public HospitalObj hospitalObj;
 
     void Awake()
     {
@@ -45,6 +47,9 @@ public class VillageData : MonoBehaviour
         }
         Instance = this;
         Debug.Log("VillageData instance set on: " + gameObject.name);
+
+        allBeds ??= FindObjectsByType<BedObj>(FindObjectsSortMode.None);
+
 
         GetNumberOfVillagers();
     }
@@ -180,9 +185,53 @@ public class VillageData : MonoBehaviour
         {
             return null;
         }
+
+        var eligible = sickVillagers.Keys
+                    .Where(v =>
+                    {
+                        var ai = v.GetComponent<VillagerAI>();
+                        return ai != null && !ai.isBeingHealed;
+                    })
+                    .ToList();
+
+        if (eligible.Count == 0)
+            return null;
+
         //Returns the sickest villager
-        var sortedByValue = sickVillagers.OrderBy(pair => pair.Value);
-        return sortedByValue.First().Key;
+        var sortedByValue = eligible.OrderBy(v => sickVillagers[v]);
+        return sortedByValue.First();
+
+    }
+
+    #endregion
+
+    #region wandering
+    public void AddWanderingVillager(Villager wanderingVillager)
+    {
+        wanderingVillagers.Add(wanderingVillager, wanderingVillager.health);
+    }
+
+    public void RemoveWanderingVillager(Villager stoppedWanderingVillager)
+    {
+        wanderingVillagers.Remove(stoppedWanderingVillager);
+    }
+
+    public Villager GetWanderingVillager(Villager exclude = null)
+    {
+        if (wanderingVillagers.Count == 0)
+        {
+            return null;
+        }
+
+        var eligibleKeys = wanderingVillagers.Keys
+                        .Where(v => v != exclude)
+                        .ToList();
+
+        if (eligibleKeys.Count == 0)
+            return null;
+
+        int randomIndex = Random.Range(0, eligibleKeys.Count);
+        return eligibleKeys[randomIndex];
 
     }
 
@@ -201,5 +250,17 @@ public class VillageData : MonoBehaviour
 
     }
 
+    #endregion
+
+    #region Sleeping
+    public Transform GetFreeSleepLocation()
+    {
+        foreach (var bed in allBeds)
+        {
+            if (!bed.IsOccupied)
+                return bed.transform;
+        }
+        return null;
+    }
     #endregion
 }

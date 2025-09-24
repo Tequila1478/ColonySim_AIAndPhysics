@@ -8,7 +8,7 @@ public class BeingHealedState : IVillagerState
 
     public void Enter()
     {
-        villager.agent.enabled = false;
+        villager.agent.isStopped = true;
     }
 
     public void Execute()
@@ -21,7 +21,7 @@ public class BeingHealedState : IVillagerState
 
     public void Exit()
     {
-        villager.agent.enabled = true;
+        villager.agent.isStopped = false;
     }
 
     public void OnDropped()
