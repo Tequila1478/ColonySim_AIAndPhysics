@@ -15,7 +15,10 @@ public class WanderState : VillagerStateBase
     private Villager socialTarget;       // villager being approached
     private VillagerAI socialTargetAI;
 
-    public WanderState(VillagerAI villager) :base (villager) {}
+    public WanderState(VillagerAI villager) :base (villager) 
+    {
+        rate = -0.001f;
+    }
 
     public override void Enter()
     {
@@ -29,7 +32,7 @@ public class WanderState : VillagerStateBase
         StartWander();
     }
 
-    public override void Execute()
+    protected override void OnExecute()
     {
         if (socialising)
         {
@@ -94,6 +97,7 @@ public class WanderState : VillagerStateBase
                     villager.animator.SetBool(villager.moveBool, true);
 
                 Debug.Log(villager.name + " is going to socialise with " + socialTarget.name);
+                villager.villagerData.socialisedRecently = true;
                 return;
             }
         }

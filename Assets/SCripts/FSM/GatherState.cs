@@ -11,7 +11,14 @@ public class GatherState : VillagerStateBase
 
     private Transform currentMoveLocation;
 
-    public GatherState(VillagerAI villager) : base(villager) { }
+    public GatherState(VillagerAI villager) : base(villager) 
+    {
+        rate = -Mathf.Clamp(Mathf.Pow(0.5f, (villager.villagerData.GetSkill(VillagerSkills.Gather) - 1) / 4f), 0.01f, 1f);
+        skillType = VillagerSkills.Gather;
+        float skillLevel = villager.villagerData.GetSkill(skillType);
+        levelUpRate = Mathf.Clamp(Mathf.Pow(0.5f, skillLevel / 5f), 0.0001f, 0.1f);
+
+    }
 
     public override void Enter()
     {
@@ -40,7 +47,7 @@ public class GatherState : VillagerStateBase
 
         villager.MoveTo(currentMoveLocation.position);
     }
-    public override void Execute()
+    protected override void OnExecute()
     {
         // Check if we reached destination
         if (villager.agent.enabled && currentMoveLocation != null && !villager.agent.pathPending && villager.agent.remainingDistance <= Mathf.Max(villager.agent.stoppingDistance, villager.reachThreshold))
@@ -63,7 +70,7 @@ public class GatherState : VillagerStateBase
         villager.agent.isStopped = true; // pause agent while gathering
         // optional: play gather animation here
 
-        yield return new WaitForSeconds(targetNode.gatherTime);
+        yield return new WaitForSeconds(targetNode.gatherTime * MoodEffects.GetEffects(villager.villagerData.mood).workSpeedMultiplier);
 
         if (!holdingResources)
         {
@@ -74,6 +81,7 @@ public class GatherState : VillagerStateBase
             if (carryingResource == 0)
             {
                 Debug.Log("Resource deplenished");
+                villager.villagerData.failedTaskRecently = true;
                 villager.SetRole(Villager_Role.Wander);
             }
         }
@@ -87,7 +95,7 @@ public class GatherState : VillagerStateBase
     {
         float skillLevel = villager.villagerData.GetSkill(VillagerSkills.Gather);
 
-        return targetNode.gatherAmount * VillageData.Instance.GetSkillEffect(skillLevel);
+        return targetNode.gatherAmount * VillageData.Instance.GetSkillEffect(skillLevel) * MoodEffects.GetEffects(villager.villagerData.mood).workEfficiencyMultiplier;
 
     }
     private void DeliverResource()
@@ -103,8 +111,8 @@ public class GatherState : VillagerStateBase
         }
         carryingResource = 0;
         holdingResources = false;
+        villager.villagerData.completedTaskRecently = true;
 
-        villager.villagerData.AddSkill(VillagerSkills.Gather);
 
 
         // loop back to next resource

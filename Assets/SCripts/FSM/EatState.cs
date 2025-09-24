@@ -12,7 +12,10 @@ public class EatState : VillagerStateBase
 
     private Transform currentMoveLocation;
 
-    public EatState(VillagerAI villager) : base(villager) { }
+    public EatState(VillagerAI villager) : base(villager)
+    {
+        rate = -0.0001f;
+    }
 
     public override void Enter()
     {
@@ -28,7 +31,7 @@ public class EatState : VillagerStateBase
         
         villager.MoveTo(currentMoveLocation.position);
     }
-    public override void Execute()
+    protected override void OnExecute()
     {
         // Check if we reached destination
         if (villager.agent.enabled && currentMoveLocation != null && !villager.agent.pathPending && villager.agent.remainingDistance <= Mathf.Max(villager.agent.stoppingDistance, villager.reachThreshold))
@@ -69,6 +72,7 @@ public class EatState : VillagerStateBase
                 else
                 {
                     villager.canTryEat = false;
+                villager.villagerData.hasEatenRecently = true;
                     villager.eatCooldown = 0;
                     villager.SetRole(Villager_Role.Wander);
 

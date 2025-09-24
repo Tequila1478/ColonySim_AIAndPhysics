@@ -12,7 +12,14 @@ public class BuildState : VillagerStateBase
 
     private Transform currentMoveLocation;
 
-    public BuildState(VillagerAI villager) : base(villager) { }
+    public BuildState(VillagerAI villager) : base(villager) 
+    {
+        rate = -Mathf.Clamp(Mathf.Pow(0.5f, (villager.villagerData.GetSkill(VillagerSkills.Build) - 1) / 4f), 0.01f, 1f);
+        skillType = VillagerSkills.Build;
+        float skillLevel = villager.villagerData.GetSkill(skillType);
+        levelUpRate = Mathf.Clamp(Mathf.Pow(0.5f, skillLevel / 5f), 0.001f, 0.1f);
+
+    }
 
     public override void Enter()
     {
@@ -48,7 +55,7 @@ public class BuildState : VillagerStateBase
     {
         villager.agent.isStopped = true; // pause agent while gathering
         // optional: play gather animation here
-        yield return new WaitForSeconds(targetNode.gatherTime);
+        yield return new WaitForSeconds(targetNode.gatherTime * MoodEffects.GetEffects(villager.villagerData.mood).workSpeedMultiplier);
 
         if (!carryingWood)
         {
@@ -58,6 +65,7 @@ public class BuildState : VillagerStateBase
 
             if (resourcesCarried == 0)
             {
+                villager.villagerData.failedTaskRecently = true;
                 Debug.Log("Resource deplenished");
                 villager.SetRole(Villager_Role.Wander);
             }
@@ -76,7 +84,7 @@ public class BuildState : VillagerStateBase
     {
         villager.agent.isStopped = true; // pause agent while gathering
         // optional: play gather animation here
-        yield return new WaitForSeconds(building.buildTime);
+        yield return new WaitForSeconds(building.buildTime * MoodEffects.GetEffects(villager.villagerData.mood).workEfficiencyMultiplier);
 
         building.ConstructBuilding(resourcesCarried);
 
@@ -84,8 +92,7 @@ public class BuildState : VillagerStateBase
         carryingWood = false;
         resourcesCarried = 0;
         villager.agent.isStopped = false;
-
-        villager.villagerData.AddSkill(VillagerSkills.Build);
+        villager.villagerData.completedTaskRecently = true;
 
         if (building.isComplete)
         {
@@ -97,7 +104,7 @@ public class BuildState : VillagerStateBase
         yield break;
     }
 
-    public override void Execute()
+    protected override void OnExecute()
     {
         if (villager.agent.pathPending) return;
 
@@ -113,6 +120,8 @@ public class BuildState : VillagerStateBase
             villager.agent.isStopped = true;
             villager.StartCoroutine(DeliverWoodCoroutine());
         }
+        
+        
     }
 
     private float GetGatherAmount()

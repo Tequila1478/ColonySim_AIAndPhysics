@@ -15,4 +15,8 @@ public class DeadState : VillagerStateBase
         //Doesn't change state, stays in this one instead
     }
 
+    protected override void OnExecute()
+    {
+        //throw new System.NotImplementedException();
+    }
 }

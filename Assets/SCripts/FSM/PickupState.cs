@@ -16,6 +16,7 @@ public class PickupState : VillagerStateBase
         {
             villager.animator.SetBool(villager.moveBool, false);
         }
+        villager.villagerData.wasPickedupRecently = true;
     }
 
 
@@ -27,4 +28,8 @@ public class PickupState : VillagerStateBase
         }
     }
 
+    protected override void OnExecute()
+    {
+//throw new System.NotImplementedException();
+    }
 }

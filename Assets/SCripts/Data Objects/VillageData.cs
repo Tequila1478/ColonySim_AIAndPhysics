@@ -7,6 +7,8 @@ public class VillageData : MonoBehaviour
 {       
 
     public static VillageData Instance { get; private set; }
+    [Header("Villager Settings")]
+    public float villagerBaseSpeed = 0.5f;
 
     [Header("Resources")]
     public float villagerCount;

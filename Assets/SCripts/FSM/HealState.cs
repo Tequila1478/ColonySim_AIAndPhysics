@@ -10,7 +10,14 @@ public class HealState : VillagerStateBase
     private float healTimer;
     private bool isHealing = false;
 
-    public HealState(VillagerAI villager) : base(villager) { }
+    public HealState(VillagerAI villager) : base(villager) 
+    {
+        rate = -Mathf.Clamp(Mathf.Pow(0.5f, (villager.villagerData.GetSkill(VillagerSkills.Heal) - 1) / 4f), 0.01f, 1f);
+        skillType = VillagerSkills.Heal;
+        float skillLevel = villager.villagerData.GetSkill(skillType);
+        levelUpRate = Mathf.Clamp(Mathf.Pow(0.5f, skillLevel / 5f), 0.001f, 0.1f);
+
+    }
 
     public override void Enter()
     {
@@ -36,7 +43,7 @@ public class HealState : VillagerStateBase
         isHealing = false;
     }
 
-    public override void Execute()
+    protected override void OnExecute()
     {
         if (target == null)
         {
@@ -74,6 +81,7 @@ public class HealState : VillagerStateBase
             target.IncrementHealth(VillageData.Instance.hospitalObj.healAmount);
             target.GetComponent<VillagerAI>().isBeingHealed = false;
             target.isSick = false;
+        villager.villagerData.completedTaskRecently = true;
 
         villager.SetRole(Villager_Role.Wander); // Reset healer's role
     }

@@ -8,7 +8,10 @@ public class SleepState : VillagerStateBase
     private Coroutine sleepRoutine;
 
     private float sleepTimer;
-    public SleepState(VillagerAI villager) : base(villager) { }
+    public SleepState(VillagerAI villager) : base(villager) 
+    {
+        rate = -0.0001f;
+    }
 
 
     private BedObj setBed;
@@ -16,7 +19,13 @@ public class SleepState : VillagerStateBase
     public override void Enter()
     {
         Debug.Log("Villager sleepy");
+        if (villager == null)
+        {
+            Debug.LogError("SleepState.Enter: villager is null!");
+        }
         // 1. Find a sleep location
+        villager.agent.isStopped = false;
+
         sleepLocation = VillageData.Instance.GetFreeSleepLocation();
 
         if (sleepLocation == null)
@@ -35,13 +44,19 @@ public class SleepState : VillagerStateBase
             return;
         }
         if (setBed != null) setBed.IsOccupied = true;
+        if (setBed == null)
+        {
+            Debug.LogError("SleepCoroutine: setBed is null!");
+            villager.SetRole(villager.villagerData.GetRandomRole());
+        }
+
 
         Debug.Log("Villager moving to bed");
         // Move to bed
         villager.MoveTo(sleepLocation.position);
     }
 
-    public override void Execute()
+    protected override void OnExecute()
     {
         if (villager.agent.pathPending) return;
 
@@ -55,6 +70,23 @@ public class SleepState : VillagerStateBase
 
     private IEnumerator SleepCoroutine()
     {
+        //Debugging purpoises
+        if (villager == null)
+        {
+            Debug.LogError("SleepCoroutine: villager is null!");
+            yield break;
+        }
+        if (villager.villagerData == null)
+        {
+            Debug.LogError("SleepCoroutine: villagerData is null!");
+            yield break;
+        }
+        if (setBed == null)
+        {
+            Debug.LogError("SleepCoroutine: setBed is null!");
+            yield break;
+        }
+
         isSleeping = true;
         if (villager.animator != null)
             villager.animator.SetBool("isSleeping", true);
@@ -63,7 +95,9 @@ public class SleepState : VillagerStateBase
 
         while (villager.villagerData.energy < 100)
         {
-            villager.villagerData.energy += setBed.sleepRecoveryRate * Time.deltaTime;
+            rate = setBed.sleepRecoveryRate;
+
+            //villager.villagerData.energy += setBed.sleepRecoveryRate * Time.deltaTime;
 
 
             // Calculate energy % relative to max health/energy
@@ -78,7 +112,7 @@ public class SleepState : VillagerStateBase
                 wakeChance = baseChance;
             }
 
-            else if (energy < 50)
+            else if (energy < 80)
             {
                 wakeChance = 0;
             }
@@ -118,16 +152,28 @@ public class SleepState : VillagerStateBase
             BedObj bed = sleepLocation.GetComponent<BedObj>();
             if (bed != null) bed.IsOccupied = false;
         }
-
+        villager.villagerData.sleptRecently = true;
         villager.SetRole(Villager_Role.Wander); // go back to normal routine
     }
 
     public override void Exit()
     {
+        if (setBed != null)
+        {
+            setBed.IsOccupied = false; // or whatever flag you use
+            setBed = null;
+        }
+
         if (sleepRoutine != null)
         {
             villager.StopCoroutine(sleepRoutine);
             sleepRoutine = null;
+        }
+
+        if (villager.agent != null)
+        {
+            villager.agent.isStopped = false;  // allow movement again
+            villager.agent.ResetPath();        // clear old sleep path
         }
 
         isSleeping = false;

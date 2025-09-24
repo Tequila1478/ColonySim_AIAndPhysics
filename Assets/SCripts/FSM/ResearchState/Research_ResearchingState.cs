@@ -45,7 +45,7 @@ public class Research_ResearchingState : IVillagerSubState
     {
         timer += Time.deltaTime;
 
-        if (timer >= table.researchTime)
+        if (timer >= (table.researchTime * MoodEffects.GetEffects(villager.villagerData.mood).workSpeedMultiplier))
         {
             // finish research
             if (parent.researchCarried == 0)
@@ -62,7 +62,7 @@ public class Research_ResearchingState : IVillagerSubState
     {
         float skillLevel = villager.villagerData.GetSkill(VillagerSkills.Research);
 
-        return table.researchAmount * VillageData.Instance.GetSkillEffect(skillLevel);
+        return table.researchAmount * VillageData.Instance.GetSkillEffect(skillLevel) * MoodEffects.GetEffects(villager.villagerData.mood).workEfficiencyMultiplier;
 
     }
 

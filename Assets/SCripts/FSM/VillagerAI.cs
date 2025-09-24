@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
@@ -6,9 +7,10 @@ public class VillagerAI : MonoBehaviour
 {
     [Header("Role Settings")]
     public Villager_Role role;
-    private Villager_Role currentRole; // for detecting changes
+    public Villager_Role currentRole { get; private set; } // for detecting changes
 
     public Villager villagerData;
+    public string state;
 
     [Header("General")]
     public bool startOnAwake = true;
@@ -36,6 +38,10 @@ public class VillagerAI : MonoBehaviour
     [HideInInspector] public VillagerFSM fsm;
     [HideInInspector] public Vector3 homePosition;
 
+
+
+    public MoodEffects currentMoodEffects;
+
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -52,6 +58,13 @@ public class VillagerAI : MonoBehaviour
         agent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
     }
 
+    public void ApplyMoodEffects()
+    {
+        currentMoodEffects = MoodEffects.GetEffects(villagerData.mood);
+        agent.speed = VillageData.Instance.villagerBaseSpeed * villagerData.speedMultiplier * currentMoodEffects.moveSpeedMultiplier;
+
+
+    }
 
     public void OnBecomeSick()
     {
@@ -123,51 +136,176 @@ public class VillagerAI : MonoBehaviour
 
     public void SetRole(Villager_Role newRole)
     {
+        StopAllCoroutines();
+
         role = newRole;
         villagerData.role = newRole;
+
+        TryChangeMood();
         // role change will be caught in Update
+    }
+
+    public static class WeightedRandom
+    {
+        public static T Choose<T>(Dictionary<T, float> weights)
+        {
+            float total = 0f;
+            foreach (var w in weights.Values)
+                total += w;
+
+            float roll = Random.value * total;
+            float cumulative = 0f;
+
+            foreach (var kvp in weights)
+            {
+                cumulative += kvp.Value;
+                if (roll <= cumulative)
+                    return kvp.Key;
+            }
+
+            // fallback (shouldn’t happen if weights > 0)
+            foreach (var kvp in weights)
+                return kvp.Key;
+
+            return default;
+        }
+    }
+
+    private void TryChangeMood()
+    {
+        float chance = 0.1f; // 10% chance per role switch
+        if (Random.value >= chance) return;
+
+        Mood oldMood = villagerData.mood;
+
+        // Build weighted mood options
+        var weights = new Dictionary<Mood, float>
+    {
+        { Mood.Happy, 1f },
+        { Mood.Sad, 1f },
+        { Mood.Angry, 1f },
+        { Mood.Neutral, 1f },
+        { Mood.Sleepy, 1f }
+    };
+
+        // Apply contextual biases
+        if (villagerData.energy < 20)
+        {
+            weights[Mood.Sleepy] += 3f; // much more likely to be sad
+        }
+
+        if (villagerData.failedTaskRecently) // you’d set this flag in e.g. Gather when resource empty
+        {
+            weights[Mood.Angry] += 3f;
+            villagerData.failedTaskRecently = false; // reset
+        }
+
+        if (villagerData.completedTaskRecently) // set this in BuildState when finishing
+        {
+            weights[Mood.Happy] += 3f;
+            villagerData.completedTaskRecently = false;
+        }
+
+        if(villagerData.sleptRecently) // set this in BuildState when finishing
+        {
+            weights[Mood.Sleepy] -= 3f;
+            villagerData.sleptRecently = false;
+        }
+
+        if (villagerData.socialisedRecently) // set this in BuildState when finishing
+        {
+            weights[Mood.Sad] -= 3f;
+            villagerData.socialisedRecently = false;
+        }
+        if (villagerData.hasEatenRecently) // set this in BuildState when finishing
+        {
+            weights[Mood.Happy] += 3f;
+            weights[Mood.Sleepy] += 3f;
+            villagerData.hasEatenRecently = false;
+        }
+        if (villagerData.wasPickedupRecently) // set this in BuildState when finishing
+        {
+            weights[Mood.Angry] += 3f;
+            weights[Mood.Neutral] += 3f;
+            villagerData.wasPickedupRecently = false;
+        }
+
+        // Pick new mood
+        Mood newMood = WeightedRandom.Choose(weights);
+
+        // Avoid rerolling the same mood (optional)
+        if (newMood == oldMood)
+        {
+            // re-roll once more, but weaker
+            newMood = WeightedRandom.Choose(weights);
+        }
+
+        villagerData.mood = newMood;
+        Debug.Log($"{name} mood changed from {oldMood} → {newMood}");
+        ApplyMoodEffects();
+
     }
 
     public void ApplyRole(Villager_Role newRole)
     {
         villagerData.role = newRole;
+        VillagerStateBase newState = null;
 
         switch (newRole)
         {
             case Villager_Role.Wander:
-                fsm.ChangeState(new WanderState(this));
+                newState = new WanderState(this);
+                //fsm.ChangeState(new WanderState(this));
                 break;
             case Villager_Role.Sick:
-                fsm.ChangeState(new SickState(this));
+                newState = new SickState(this);
+
+                //fsm.ChangeState(new SickState(this));
                 break;
             case Villager_Role.Gather:
-                fsm.ChangeState(new GatherState(this));
+                newState = new GatherState(this);
+
+               // fsm.ChangeState(new GatherState(this));
                 break;
             case Villager_Role.Research:
-                fsm.ChangeState(new ResearchState(this));
+                newState = new ResearchState(this);
+
+                //fsm.ChangeState(new ResearchState(this));
                 break;
             case Villager_Role.Build:
-                fsm.ChangeState(new BuildState(this));
+                newState = new BuildState(this);
+
+                //fsm.ChangeState(new BuildState(this));
                 break;
             case Villager_Role.Eat:
-                fsm.ChangeState(new EatState(this));
+                newState = new EatState(this);
+
+                //fsm.ChangeState(new EatState(this));
                 break;
             case Villager_Role.Dead:
-                fsm.ChangeState(new DeadState(this));
+                newState = new DeadState(this);
+
+                //fsm.ChangeState(new DeadState(this));
                 break;
             case Villager_Role.Heal:
-                fsm.ChangeState(new HealState(this));
+                newState = new HealState(this);
+                //fsm.ChangeState(new HealState(this));
                 break;
             case Villager_Role.Sleep:
-                fsm.ChangeState(new SleepState(this));
+                newState = new SleepState(this);
+                //fsm.ChangeState(new SleepState(this));
                 break;
             case Villager_Role.PickedUp:
-                fsm.ChangeState(new PickupState(this));
+                newState = new PickupState(this);
+                //fsm.ChangeState(new PickupState(this));
                 break;
             default:
-                fsm.ChangeState(new WanderState(this) );
+                newState = new WanderState(this);
+                //fsm.ChangeState(new WanderState(this) );
                 break;
         }
+        state = newState.ToString();
+        fsm.ChangeState(newState);
         ChangeColour();
     }
     #endregion

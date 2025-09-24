@@ -31,7 +31,7 @@ public class Research_DeliverResearchState : IVillagerSubState
             parent.researchCarried = 0;
 
         }
-        villager.villagerData.AddSkill(VillagerSkills.Research);
+        //villager.villagerData.AddSkill(VillagerSkills.Research);
 
 
         parent.StartMoveTo(parent.table.gameObject);
@@ -44,6 +44,7 @@ public class Research_DeliverResearchState : IVillagerSubState
 
     public void Exit()
     {
+        villager.villagerData.completedTaskRecently = true;
         villager.agent.isStopped = false;
     }
 }

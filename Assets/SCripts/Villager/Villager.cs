@@ -7,6 +7,7 @@ public class Villager : MonoBehaviour
 {
     public bool isSick;
     public float happiness = 100f;
+    public Mood mood = Mood.Neutral;
 
     public string gatherType = "food";
     public Villager_Role role;
@@ -27,6 +28,14 @@ public class Villager : MonoBehaviour
     public float energy = 100f;
     public float recoveryRate = 1f;
     public float wakeUpChance = 0f;
+
+    public bool failedTaskRecently = false;
+    public bool completedTaskRecently = false;
+    public bool sleptRecently = false;
+    public bool socialisedRecently = false;
+    public bool hasEatenRecently = false;
+    public bool wasPickedupRecently = false;
+
 
     void Start()
     {
@@ -85,6 +94,43 @@ public class Villager : MonoBehaviour
         }
     }
 
+    public float IncrementEnergy(float rate)
+    {
+        energy += rate * recoveryRate;
+        energy = Mathf.Clamp(energy, 0f, 100f);
+
+        //logic for changin states if too sleepy
+        return CalculateSleepChance();
+    }
+
+    public float CalculateSleepChance()
+    {
+        float chance = 0f;
+
+        // Base chance from energy
+        if (energy >= 30f)
+        {
+            chance = 0f;
+            return Mathf.Clamp(chance, 0f, 100f);
+        }
+        else if (energy > 20f)
+        {
+            // Linear interpolation: 20 energy = 50%, 80 energy = 0%
+            chance = Mathf.Lerp(5f, 0f, (energy - 20f) / 60f);
+        }
+        else // energy <= 20
+        {
+            // Linear interpolation: 0 energy = 100%, 20 energy = 50%
+            chance = Mathf.Lerp(100f, 5f, energy / 20f);
+        }
+
+        // Add health modifier: +(100-health)/200 as a percentage
+        chance += (100f - health) / 200f; // (0-100)/200 * 100 = percentage
+
+        // Clamp to 0–100%
+        return Mathf.Clamp(chance, 0f, 100f);
+    }
+
     #region Skills
     public Dictionary<VillagerSkills, float> skills;
     public Dictionary<VillagerSkills, float> learnModifiers;
@@ -126,10 +172,11 @@ public class Villager : MonoBehaviour
         skills[type] = value;
     }
 
-    public void AddSkill(VillagerSkills type)
+    public void AddSkill(VillagerSkills type, float skillGain = 0.1f)
     {
-        skills[type] += (0.1f * learnModifiers[type]);
+        skills[type] += (skillGain * learnModifiers[type]);
     }
+
 
     public VillagerSkills GetRandomSkill()
     {
@@ -160,7 +207,7 @@ public class Villager : MonoBehaviour
             return Villager_Role.Sick;
         }
         // Step 1: Base wander weight (villagers will always have some chance to wander)
-        float baseWanderWeight = 1f;
+        float baseWanderWeight = 1f + MoodEffects.GetEffects(mood).wanderChanceModifier;
 
         // Step 2: Get average skill level
         float totalSkill = 0f;

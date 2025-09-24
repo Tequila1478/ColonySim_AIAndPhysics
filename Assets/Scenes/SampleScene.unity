@@ -1642,7 +1642,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1db21f9c017498a499578f6a129e7cc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sleepRecoveryRate: 0.5
+  sleepRecoveryRate: 0.55
 --- !u!212 &455900451
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2309,6 +2309,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   role: 8
   villagerData: {fileID: 0}
+  state: 
   startOnAwake: 1
   reachThreshold: 0.4
   animator: {fileID: 0}
@@ -2753,6 +2754,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   role: 1
   villagerData: {fileID: 0}
+  state: 
   startOnAwake: 1
   reachThreshold: 0.4
   animator: {fileID: 0}
@@ -6035,6 +6037,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   role: 0
   villagerData: {fileID: 0}
+  state: 
   startOnAwake: 1
   reachThreshold: 0.4
   animator: {fileID: 0}

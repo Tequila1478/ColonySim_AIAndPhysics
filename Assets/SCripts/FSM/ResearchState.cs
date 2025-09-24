@@ -10,7 +10,14 @@ public class ResearchState : VillagerStateBase
 
     public float researchCarried;
 
-    public ResearchState(VillagerAI villager) : base(villager) { }
+    public ResearchState(VillagerAI villager) : base(villager) 
+    {
+        rate = -Mathf.Clamp(Mathf.Pow(0.5f, (villager.villagerData.GetSkill(VillagerSkills.Research) - 1) / 4f), 0.01f, 1f);
+        skillType = VillagerSkills.Research;
+        float skillLevel = villager.villagerData.GetSkill(skillType);
+        levelUpRate = Mathf.Clamp(Mathf.Pow(0.5f, skillLevel / 5f), 0.0001f, 0.1f);
+
+    }
 
 
     public override void Enter()
@@ -29,7 +36,7 @@ public class ResearchState : VillagerStateBase
         StartMoveTo(table.gameObject);
     }
 
-    public override void Execute()
+    protected override void OnExecute()
     {
         currentSubState?.Execute();
     }
