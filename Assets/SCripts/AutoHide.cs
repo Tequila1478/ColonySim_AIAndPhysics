@@ -17,7 +17,7 @@ public class AutoHide : MonoBehaviour
     {
         if (!isActive) return;
 
-        timer -= Time.deltaTime;
+        timer -= Time.unscaledDeltaTime;
         if (timer <= 0f)
         {
             gameObject.SetActive(false);

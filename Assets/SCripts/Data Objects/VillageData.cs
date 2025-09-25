@@ -4,11 +4,13 @@ using TMPro;
 using UnityEngine;
 
 public class VillageData : MonoBehaviour
-{       
-
+{
+    public bool GameOver = false;
     public static VillageData Instance { get; private set; }
     [Header("Villager Settings")]
     public float villagerBaseSpeed = 0.5f;
+
+    public GameObject gameOverUI;
 
     [Header("Resources")]
     public float villagerCount;
@@ -53,12 +55,20 @@ public class VillageData : MonoBehaviour
         allBeds ??= FindObjectsByType<BedObj>(FindObjectsSortMode.None);
 
 
-        GetNumberOfVillagers();
+        UpdateNumberOfVillagers();
     }
 
-    public void GetNumberOfVillagers()
+    public void UpdateNumberOfVillagers()
     {
-        //Get every villager
+        // Count all active VillagerAI in the scene
+        villagerCount = FindObjectsByType<VillagerAI>(FindObjectsSortMode.None).Count(ai => ai.fsm.currentState != null && !(ai.fsm.currentState is DeadState));
+
+        // If no villagers left, set GameOver
+        if (villagerCount < 1)
+        {
+            GameOver = true;
+            Debug.Log("Game Over! All villagers are dead.");
+        }
     }
 
     public void IncrementFood(float foodAmount)
@@ -244,13 +254,12 @@ public class VillageData : MonoBehaviour
     public TMP_Text researchTextBox;
     public TMP_Text foodTextBox;
     public TMP_Text woodTextBox;
-    private void Update()
-    {
-        researchTextBox.text = researchCount.ToString();
-        foodTextBox.text = foodCount.ToString();
-        woodTextBox.text = lumberCount.ToString();
 
-    }
+    public float lastFoodCount;
+    public float lastLumberCount;
+    public float lastResearchCount;
+
+    
 
     #endregion
 

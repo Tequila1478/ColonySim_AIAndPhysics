@@ -13,6 +13,10 @@ public class SickState : VillagerStateBase
     private float maxIdleTime = 4f;
     private float reachThreshold = 0.4f;
 
+    private bool isBeingHealed = false;
+
+    public override bool CanChangeRole => !isBeingHealed;
+
     public SickState(VillagerAI villager) : base(villager) {
         rate = -0.0001f;
     }
@@ -25,6 +29,7 @@ public class SickState : VillagerStateBase
 
     protected override void OnExecute()
     {
+        isBeingHealed = villager.isBeingHealed;
         //Debug.Log($"{villager.name} healing state: {villager.isBeingHealed}");
         if (villager.agent == null || !villager.agent.enabled) return;
 

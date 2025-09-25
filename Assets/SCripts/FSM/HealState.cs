@@ -9,6 +9,7 @@ public class HealState : VillagerStateBase
     private float healDuration;
     private float healTimer;
     private bool isHealing = false;
+    public override bool CanChangeRole => !isHealing;
 
     public HealState(VillagerAI villager) : base(villager) 
     {
@@ -84,13 +85,28 @@ public class HealState : VillagerStateBase
         villager.villagerData.completedTaskRecently = true;
 
         villager.SetRole(Villager_Role.Wander); // Reset healer's role
+        target = null;
     }
 
     public override void Exit()
     {
         villager.agent.isStopped = false;
         isHealing = false;
-        target = null;
+
+        if (target != null)
+        {
+            var targetAI = target.GetComponent<VillagerAI>();
+            if (targetAI != null)
+            {
+                targetAI.isBeingHealed = false;
+
+                // If healing was incomplete, restore sick state
+                if (!targetAI.villagerData.isSick)
+                    targetAI.villagerData.isSick = true;
+            }
+
+            target = null;
+        }
     }
 
     public override void OnDropped()

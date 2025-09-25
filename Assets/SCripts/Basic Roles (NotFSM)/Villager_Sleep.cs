@@ -22,6 +22,8 @@ public class Villager_Sleep : MonoBehaviour
     private bool isSleeping = false;
     private bool isOccupied = false;
 
+    private Coroutine sleepCoroutine;
+
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -29,12 +31,12 @@ public class Villager_Sleep : MonoBehaviour
 
     void OnEnable()
     {
-        StartCoroutine(SleepRoutine());
+        sleepCoroutine = StartCoroutine(SleepRoutine());
     }
 
     void OnDisable()
     {
-        StopAllCoroutines();
+        StopCoroutine(sleepCoroutine);
     }
 
     private IEnumerator SleepRoutine()

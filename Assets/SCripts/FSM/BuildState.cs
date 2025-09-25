@@ -61,7 +61,6 @@ public class BuildState : VillagerStateBase
         {
             carryingWood = true;
             resourcesCarried = targetNode.GatherResource(GetGatherAmount());
-            targetNode.incrementResource(-resourcesCarried);
 
             if (resourcesCarried == 0)
             {

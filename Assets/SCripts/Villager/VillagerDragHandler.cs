@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public class VillagerDragHandler : MonoBehaviour
@@ -70,6 +71,13 @@ public class VillagerDragHandler : MonoBehaviour
         isDragging = false;
 
         Vector2 mouseScreen = actions.Player.Point.ReadValue<Vector2>();
+
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(Pointer.current.deviceId))
+        {
+            // Don't start dragging or selecting villager
+            return;
+        }
+
         Vector3 worldPos = mainCamera.ScreenToWorldPoint(mouseScreen);
         worldPos.z = 0;
 
@@ -149,7 +157,7 @@ public class VillagerDragHandler : MonoBehaviour
 
         if (selectedVillager != null && !isDragging)
         {
-            clickTimer += Time.deltaTime;
+            clickTimer += Time.unscaledDeltaTime;
             if (clickTimer >= dragDelay)
             {
                 isDragging = true;
@@ -175,7 +183,7 @@ public class VillagerDragHandler : MonoBehaviour
             // Smoothly follow villager
             Vector3 targetPos = followTarget.position;
             targetPos.z = mainCamera.transform.position.z;
-            mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, targetPos, cameraSpeed * Time.deltaTime);
+            mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, targetPos, cameraSpeed * Time.unscaledDeltaTime);
         }
         else
         {
@@ -191,7 +199,7 @@ public class VillagerDragHandler : MonoBehaviour
             }
 
             // Zoom
-            mainCamera.orthographicSize -= zoom * zoomSpeed * Time.deltaTime;
+            mainCamera.orthographicSize -= zoom * zoomSpeed * Time.unscaledDeltaTime;
         }
 
         // Clamp camera position and zoom

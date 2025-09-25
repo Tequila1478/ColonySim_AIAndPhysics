@@ -11,45 +11,60 @@ public class ResourceObj : MonoBehaviour, IRoleInteractable
 
     public float GatherResource(float resourceAmount)
     {
-        if (currentAmount - resourceAmount > 0)
-            return resourceAmount;
+        float gathered = Mathf.Min(resourceAmount, currentAmount);
 
-        else
+        currentAmount -= gathered;
+
+        // Send updated amount back to VillageData
+        switch (resourceType)
         {
-            return currentAmount;
+            case "food":
+                VillageData.Instance.foodCount = currentAmount;
+                break;
+            case "lumber":
+                VillageData.Instance.lumberCount = currentAmount;
+                break;
+            case "research":
+                VillageData.Instance.researchCount = currentAmount;
+                break;
         }
-    }
 
-    public void incrementResource(float resourceAmount)
-    {
-        currentAmount += resourceAmount;
+        return gathered;
     }
 
     public void OnVillagerDropped(VillagerAI villager)
     {
-        if (resourceType == "food")
-            villager.SetRole(Villager_Role.Eat);
-
-        else if (resourceType == "lumber")
-            villager.SetRole(Villager_Role.Build);
-
-        else if (resourceType == "research")
-            villager.SetRole(Villager_Role.Research);
-        else
-            Debug.Log("Incorrect resource type. Must be one of 'food' or 'lumber' or 'research'");
+        switch (resourceType)
+        {
+            case "food":
+                villager.SetRole(Villager_Role.Eat);
+                break;
+            case "lumber":
+                villager.SetRole(Villager_Role.Build);
+                break;
+            case "research":
+                villager.SetRole(Villager_Role.Research);
+                break;
+            default:
+                Debug.LogWarning("Incorrect resource type: " + resourceType);
+                break;
+        }
     }
 
-    private void Update()
+    private void Start()
     {
-        if (resourceType == "food")
-            currentAmount = VillageData.Instance.foodCount;
-
-        else if (resourceType == "lumber")
-            currentAmount = VillageData.Instance.lumberCount;
-
-        else if (resourceType == "research")
-            currentAmount = VillageData.Instance.researchCount;
-        else
-            Debug.Log("Incorrect resource type. Must be one of 'food' or 'lumber' or 'research'");
+        // Initialize with the starting value from VillageData
+        switch (resourceType)
+        {
+            case "food":
+                currentAmount = VillageData.Instance.foodCount;
+                break;
+            case "lumber":
+                currentAmount = VillageData.Instance.lumberCount;
+                break;
+            case "research":
+                currentAmount = VillageData.Instance.researchCount;
+                break;
+        }
     }
 }

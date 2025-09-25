@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -27,7 +28,7 @@ public class VillagerAI : MonoBehaviour
     public int sampleAttempts = 30;
 
     [Header("Hunger/Health Settings")]
-    public float coolDownTimeOnEat = 600f;
+    public float coolDownTimeOnEat = 60f;
     public bool canTryEat = true;
     public float eatCooldown = 0;
 
@@ -75,15 +76,19 @@ public class VillagerAI : MonoBehaviour
     {
         if (startOnAwake)
             ApplyRole(role);
-        float waitTime = 60f/villagerData.hungerRate;
-        InvokeRepeating("DecreaseFood", waitTime, waitTime);
+
+        if (VillageData.Instance != null)
+        {
+            VillageData.Instance.UpdateNumberOfVillagers();
+        }
     }
 
+   
 
     void DecreaseFood()
     {
         villagerData.hunger -= 1;
-        if(villagerData.hunger < 50 && canTryEat)
+        if(villagerData.hunger < 50 && canTryEat && currentRole != Villager_Role.Sleep && currentRole != Villager_Role.Eat)
         {
             SetRole(Villager_Role.Eat);
         }
@@ -129,14 +134,35 @@ public class VillagerAI : MonoBehaviour
             if (eatCooldown >= coolDownTimeOnEat)
             {
                 canTryEat = true;
+                eatCooldown = coolDownTimeOnEat;
             }
         }
 
+        HandleHunger();
+
     }
 
-    public void SetRole(Villager_Role newRole)
+    private float hungerAccumulator = 0f;
+    private float hungerTickInterval = 60f;
+
+    private void HandleHunger()
     {
-        StopAllCoroutines();
+        hungerTickInterval = Mathf.Clamp(60f / Mathf.Max(0.01f, villagerData.hungerRate), 0.1f, 60f); hungerAccumulator += Time.deltaTime; // deltaTime is already scaled by Time.timeScale
+
+        if (hungerAccumulator >= hungerTickInterval)
+        {
+            hungerAccumulator -= hungerTickInterval;
+            DecreaseFood();
+        }
+    }
+
+    public void SetRole(Villager_Role newRole, bool forced = false)
+    {
+        if (!forced && fsm.currentState != null && !fsm.currentState.CanChangeRole)
+            return;
+
+        if (newRole == Villager_Role.Eat && !canTryEat && !forced)
+            return;
 
         role = newRole;
         villagerData.role = newRole;

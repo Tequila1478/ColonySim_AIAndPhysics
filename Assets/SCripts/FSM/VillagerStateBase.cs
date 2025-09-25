@@ -11,6 +11,8 @@ public abstract class VillagerStateBase
     public float levelUpRate = 0f;
     public VillagerSkills skillType = VillagerSkills.Heal;
 
+    public virtual bool CanChangeRole => true;
+
     public VillagerStateBase(VillagerAI villager)
     {
         this.villager = villager;
@@ -75,7 +77,7 @@ public abstract class VillagerStateBase
 
     public virtual void OnPickUp()
     {
-        villager.SetRole(Villager_Role.PickedUp);
+        villager.SetRole(Villager_Role.PickedUp, forced: true);
     }
 
     protected virtual void UpdateSkill()
@@ -87,13 +89,13 @@ public abstract class VillagerStateBase
             villager.villagerData.AddSkill(skillType, gain);
     }
 
-    protected virtual void UpdateEnergy()
+    public virtual void UpdateEnergy()
     {
         if (villager == null) return;
 
         float sleepChance = villager.villagerData.IncrementEnergy(rate * GetMoodEnergyMultiplier());
 
-        if (Random.value < sleepChance && villager.currentRole != Villager_Role.Sleep)
+        if (Random.value < sleepChance && villager.currentRole != Villager_Role.Sleep && villager.currentRole != Villager_Role.Eat)
         {
             villager.SetRole(Villager_Role.Sleep);
         }
