@@ -156,7 +156,7 @@ public class SleepState : VillagerStateBase
         villager.SetRole(Villager_Role.Wander); // go back to normal routine
     }
 
-    public override void Exit()
+    public override void OnExit()
     {
         if (setBed != null)
         {
@@ -177,6 +177,10 @@ public class SleepState : VillagerStateBase
         }
 
         isSleeping = false;
+
+        // Reset animator
+    if (villager.animator != null)
+            villager.animator.SetBool("isSleeping", false);
     }
 
     public override void OnDropped()

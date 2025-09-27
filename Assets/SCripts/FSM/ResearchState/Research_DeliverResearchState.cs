@@ -25,16 +25,16 @@ public class Research_DeliverResearchState : IVillagerSubState
     {
         villager.agent.isStopped = true;
         yield return new WaitForSeconds(dropOff.gatherTime);
-        if (parent.researchCarried > 0)
-        {
-            VillageData.Instance.IncrementResearch(parent.researchCarried);
-            parent.researchCarried = 0;
+        //if (parent.researchCarried > 0)
+        //{
+        //    VillageData.Instance.IncrementResearch(parent.researchCarried);
+        //    parent.researchCarried = 0;
 
-        }
+        //}
         //villager.villagerData.AddSkill(VillagerSkills.Research);
 
 
-        parent.StartMoveTo(parent.table.gameObject);
+        //parent.StartMoveTo(parent.table.gameObject);
     }
 
     public void Execute()

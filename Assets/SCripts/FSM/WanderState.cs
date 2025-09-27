@@ -169,7 +169,7 @@ public class WanderState : VillagerStateBase
         }
     }
 
-    public override void Exit()
+    public override void OnExit()
     {
         VillageData.Instance.RemoveWanderingVillager(villager.villagerData);
 

@@ -25,12 +25,12 @@ public class VillagerFSM : MonoBehaviour
     public void OnDropped()
     {
         if (currentState != null)
-            currentState.OnDropped();
+            currentState.Dropped();
     }
 
     public void OnPickup()
     {
         if (currentState != null)
-            currentState.OnPickUp();
+            currentState.PickUp();
     }
 }

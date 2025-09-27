@@ -1,121 +1,242 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class GatherState : VillagerStateBase
 {
     private GatherObj targetNode;
-    private float carryingResource;
+    private GameObject spawnedResource;
 
-    public bool holdingResources = false;
+    public Transform dropOffLocation;
 
-    private Transform currentMoveLocation;
+    private bool isDelivering = false;
 
-    public GatherState(VillagerAI villager) : base(villager) 
+    private Coroutine gatherRoutine;
+
+    private float gatherAmount;
+
+    private float gatherTime;
+
+
+    private enum PushState { Approaching, Pushing }
+    private PushState pushState = PushState.Approaching;
+
+    // tuning parameters
+    public float pushGap = 0.04f;
+    public float approachThreshold = 0.12f;
+    public float spawnDistance = 1f;
+    public float deliveryDistance = 0.5f;
+
+    public GatherState(VillagerAI villager) : base(villager)
     {
         rate = -Mathf.Clamp(Mathf.Pow(0.5f, (villager.villagerData.GetSkill(VillagerSkills.Gather) - 1) / 4f), 0.01f, 1f);
         skillType = VillagerSkills.Gather;
         float skillLevel = villager.villagerData.GetSkill(skillType);
         levelUpRate = Mathf.Clamp(Mathf.Pow(0.5f, skillLevel / 5f), 0.0001f, 0.1f);
-
     }
 
     public override void Enter()
     {
+        if (VillageData.Instance.looseResources.Count > 0)
+        {
+            // Pick the first available loose resource
+            spawnedResource = VillageData.Instance.looseResources[0].gameObject;
+
+            var resourceData = spawnedResource.GetComponent<ResourceObjData>();
+            dropOffLocation = VillageData.Instance.GetDropOffLocation(resourceData.type);
+
+            // Set AI to delivering state immediately
+            dropOffLocation = VillageData.Instance.GetDropOffLocation(spawnedResource.GetComponent<ResourceObjData>().type);
+            isDelivering = true;
+            pushState = PushState.Approaching;
+
+            return;
+        }
+
         StartNextGather();
     }
 
     public void StartNextGather()
     {
-        Debug.Log($"Villager: {villager.name}, VillageData.Instance: {VillageData.Instance}, gatherType: {villager.villagerData.gatherType}");
-        Debug.Log($"Villager: {villager.name}, CheckGatherPoints output: {VillageData.Instance.CheckGatherPoints(villager.villagerData.gatherType)}");        //If there is no gather points available
         if (VillageData.Instance.CheckGatherPoints(villager.villagerData.gatherType) == 0)
         {
-            Debug.Log($"Villager: {villager?.name}, No available gather points");
-            //Return to idling
-            villager.SetRole(Villager_Role.Wander);
+            villager.SetRole(villager.villagerData.GetRandomRole());
             return;
         }
 
-        //Find resource to gather
         targetNode = VillageData.Instance.GetRandomGatherPoint(villager.villagerData.gatherType);
-        currentMoveLocation = targetNode.transform;
+        if (targetNode == null)
+        {
+            villager.SetRole(villager.villagerData.GetRandomRole());
+            return;
+        }
 
-        //Check if carrying any resources?
-        carryingResource = 0;
-        holdingResources = false;
-
-        villager.MoveTo(currentMoveLocation.position);
+        dropOffLocation = VillageData.Instance.GetDropOffLocation(villager.villagerData.gatherType);
+        isDelivering = false;
+        spawnedResource = null;
+        pushState = PushState.Approaching;
     }
+
     protected override void OnExecute()
     {
-        // Check if we reached destination
-        if (villager.agent.enabled && currentMoveLocation != null && !villager.agent.pathPending && villager.agent.remainingDistance <= Mathf.Max(villager.agent.stoppingDistance, villager.reachThreshold))
+        if (targetNode == null)
         {
-            if (carryingResource == 0)
+            villager.SetRole(villager.villagerData.GetRandomRole());
+            return;
+        }
+
+        // Go to resource point and start gathering
+        if (!isDelivering)
+        {
+            Vector2 villagerPos = villager.transform.position;
+            Vector2 nodePos = targetNode.transform.position;
+            Vector2 dirToNode = (nodePos - villagerPos).normalized;
+
+            float nodeRadius = ApproxColliderRadius(targetNode.gameObject);
+            float villagerRadius = ApproxColliderRadius(villager.gameObject);
+            Vector2 approachPoint = nodePos - dirToNode * (nodeRadius + villagerRadius + 0.05f);
+
+            MoveTowards(approachPoint, moveSpeed);
+
+            float distToNode = Vector2.Distance(villagerPos, approachPoint);
+
+            Debug.DrawLine(villager.transform.position, targetNode.transform.position, Color.yellow); // villager → resource
+
+            if (distToNode < villager.reachThreshold)
             {
-                // Arrived at resource
-                villager.StartCoroutine(GatherResource());
+                if (gatherRoutine == null)
+                {
+                    gatherRoutine = villager.StartCoroutine(GatherRoutine());
+                }
             }
-            else
+            return;
+        }
+
+        // Delivery phase
+        if (isDelivering && spawnedResource != null)
+        {
+            if (gatherRoutine != null)
             {
-                // Arrived at drop-off
-                DeliverResource();
+                villager.StopCoroutine(gatherRoutine);
+                gatherRoutine = null;
             }
+
+            Vector2 resourcePos = spawnedResource.transform.position;
+            Vector2 dropPos = dropOffLocation.position;
+            Vector2 dirToDrop = (dropPos - resourcePos).normalized;
+            float villagerRadius = ApproxColliderRadius(villager.gameObject);
+            float resourceRadius = ApproxColliderRadius(spawnedResource);
+            Vector2 pushPos = resourcePos - dirToDrop * (villagerRadius + resourceRadius + pushGap);
+            Vector2 villagerPos = villager.transform.position;
+
+            // Visual debugging: path to drop-off and push target
+            Debug.DrawLine(resourcePos, dropPos, Color.blue); // resource → drop-off
+            Debug.DrawRay(dropPos, Vector2.up * 0.3f, Color.magenta); // drop-off marker
+            Debug.DrawLine(villagerPos, pushPos, Color.cyan); // villager → pushPos
+
+            switch (pushState)
+            {
+                case PushState.Approaching:
+                    MoveTowards(pushPos, moveSpeed);
+
+                    if (Vector2.Distance(villagerPos, pushPos) <= approachThreshold)
+                    {
+                        pushState = PushState.Pushing;
+                    }
+                    break;
+
+                case PushState.Pushing:
+                    Rigidbody2D villagerRb = villager.GetComponent<Rigidbody2D>();
+                    if (villagerRb != null)
+                        villagerRb.linearVelocity = dirToDrop * moveSpeed;
+
+                    Vector2 villagerToResource = (resourcePos - villagerPos).normalized;
+                    float alignment = Vector2.Dot(villagerToResource, dirToDrop);
+
+                    // Visual debugging: alignment
+                    Debug.DrawLine(resourcePos, resourcePos + dirToDrop * 2f, Color.green); // intended push direction
+                    Debug.DrawLine(villagerPos, villagerPos + villagerToResource * 2f, Color.red); // villager → resource
+
+
+                    if (alignment < 0.99f)
+                    {
+                        pushState = PushState.Approaching;
+                        if (villagerRb != null) villagerRb.linearVelocity = Vector2.zero;
+                    }
+                    break;
+            }
+        }
+        else if (isDelivering && spawnedResource == null)
+        {
+            isDelivering = false;
+            pushState = PushState.Approaching;
+            StartNextGather();
+            return;
         }
     }
 
-    private IEnumerator GatherResource()
+    private IEnumerator GatherRoutine()
     {
-        villager.agent.isStopped = true; // pause agent while gathering
-        // optional: play gather animation here
+        GatherResource();
+        yield return new WaitForSeconds(gatherTime);
 
-        yield return new WaitForSeconds(targetNode.gatherTime * MoodEffects.GetEffects(villager.villagerData.mood).workSpeedMultiplier);
 
-        if (!holdingResources)
-        {
-            holdingResources = true;
-            carryingResource = targetNode.GatherResource(GetGatherAmount());
-            targetNode.incrementResource(-carryingResource);
+        // Calculate random spawn offset outside the node's collider
+        float nodeRadius = ApproxColliderRadius(targetNode.gameObject);
+        float spawnDistanceFromNode = nodeRadius + 0.5f; // small extra gap
+        float angle = Random.Range(0f, 360f) * Mathf.Deg2Rad;
+        Vector2 offset = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * spawnDistanceFromNode;
 
-            if (carryingResource == 0)
-            {
-                Debug.Log("Resource deplenished");
-                villager.villagerData.failedTaskRecently = true;
-                villager.SetRole(Villager_Role.Wander);
-            }
-        }
+        Vector2 spawnPosition = (Vector2)targetNode.transform.position + offset;
 
-        currentMoveLocation = VillageData.Instance.GetDropOffLocation(villager.villagerData.gatherType);
-        villager.agent.SetDestination(currentMoveLocation.position);
+        spawnedResource = GameObject.Instantiate(targetNode.resourcePrefab, spawnPosition, Quaternion.identity);
+        spawnedResource.GetComponent<ResourceObjData>().Init(villager.villagerData.gatherType, gatherAmount, villager.gameObject);
+
+        isDelivering = true;
+        pushState = PushState.Approaching;
         villager.agent.isStopped = false;
-    }
-
-    private float GetGatherAmount()
-    {
-        float skillLevel = villager.villagerData.GetSkill(VillagerSkills.Gather);
-
-        return targetNode.gatherAmount * VillageData.Instance.GetSkillEffect(skillLevel) * MoodEffects.GetEffects(villager.villagerData.mood).workEfficiencyMultiplier;
 
     }
-    private void DeliverResource()
+
+    public void GatherResource()
     {
-        // optional: add resource to inventory, update UI, etc.
-        if (villager.villagerData.gatherType == "food")
-        {
-            VillageData.Instance.IncrementFood(carryingResource);
-        }
-        else
-        {
-            VillageData.Instance.IncrementLumber(carryingResource);
-        }
-        carryingResource = 0;
-        holdingResources = false;
+
+        (float timeMult, float amountMult) = GetSkillImpact();
+        gatherAmount = targetNode.gatherAmount * amountMult * MoodEffects.GetEffects(villager.villagerData.mood).workEfficiencyMultiplier;
+        gatherTime = targetNode.gatherTime * timeMult * MoodEffects.GetEffects(villager.villagerData.mood).workSpeedMultiplier;
+
+
+
+        targetNode.GatherResource(gatherAmount);
+        targetNode.incrementResource(-gatherAmount);
+    }
+
+    public override void OnResourceDelivered()
+    {
+        Debug.Log($"[GatherState] Resource delivered successfully.");
+        spawnedResource = null;
         villager.villagerData.completedTaskRecently = true;
-
-
-
-        // loop back to next resource
         StartNextGather();
+    }
+
+    public override void Exit()
+    {
+        var rb = villager.GetComponent<Rigidbody2D>();
+        if (rb != null) rb.linearVelocity = Vector2.zero;
+        if(spawnedResource != null)
+        {
+            spawnedResource.GetComponent<ResourceObjData>().RemoveOwner();
+        }
+
+        spawnedResource = null;
+        isDelivering = false;
+        pushState = PushState.Approaching;
+    }
+
+    private float ApproxColliderRadius(GameObject go)
+    {
+        var col = go.GetComponent<Collider2D>();
+        if (col == null) return 0.5f;
+        return Mathf.Max(col.bounds.extents.x, col.bounds.extents.y);
     }
 }

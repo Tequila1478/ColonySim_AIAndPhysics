@@ -72,12 +72,6 @@ public class VillagerDragHandler : MonoBehaviour
 
         Vector2 mouseScreen = actions.Player.Point.ReadValue<Vector2>();
 
-        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(Pointer.current.deviceId))
-        {
-            // Don't start dragging or selecting villager
-            return;
-        }
-
         Vector3 worldPos = mainCamera.ScreenToWorldPoint(mouseScreen);
         worldPos.z = 0;
 

@@ -7,6 +7,8 @@ public abstract class VillagerStateBase
     private float tickInterval = 1f;
     private float tickTimer = 0f;
 
+    public float moveSpeed = 5f;
+
     public float rate = 0.001f;
     public float levelUpRate = 0f;
     public VillagerSkills skillType = VillagerSkills.Heal;
@@ -16,6 +18,12 @@ public abstract class VillagerStateBase
     public VillagerStateBase(VillagerAI villager)
     {
         this.villager = villager;
+        moveSpeed = villager.agent.speed * MoodEffects.GetEffects(villager.villagerData.mood).moveSpeedMultiplier;
+    }
+
+    public virtual void OnResourceDelivered()
+    {
+        // default: do nothing
     }
 
     // Core lifecycle
@@ -37,13 +45,25 @@ public abstract class VillagerStateBase
     public virtual void Exit() {
         villager.agent.enabled = true;
         villager.agent.isStopped = false;
+        villager.GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
+
+        OnExit();
     }
 
+    public virtual void OnExit() { }
+
     // Default pickup/drop behavior
+
+    public virtual void Dropped()
+    {
+        OnDropped();
+    }
     public virtual void OnDropped()
     {
-        float radius = 0.1f; // 
-        Collider2D[] hits = Physics2D.OverlapCircleAll(villager.transform.position, radius);
+        int mask = 1 << LayerMask.NameToLayer("NoVillagerCollision");
+
+        float radius = 1f; // 
+        Collider2D[] hits = Physics2D.OverlapCircleAll(villager.transform.position, radius, mask);
 
         Collider2D closestHit = null;
         float closestDist = Mathf.Infinity;
@@ -75,6 +95,10 @@ public abstract class VillagerStateBase
         }
     }
 
+    public virtual void PickUp()
+    {
+        OnPickUp();
+    }
     public virtual void OnPickUp()
     {
         villager.SetRole(Villager_Role.PickedUp, forced: true);
@@ -106,5 +130,35 @@ public abstract class VillagerStateBase
         if (villager == null || villager.villagerData == null) return 1f;
 
         return MoodEffects.GetEffects(villager.villagerData.mood).energyConsumptionMultiplier;
+    }
+
+    protected void MoveTowards(Vector2 target, float speed)
+    {
+        Rigidbody2D rb = villager.GetComponent<Rigidbody2D>();
+        Vector2 direction = (target - rb.position).normalized;
+        rb.linearVelocity = direction * speed;
+    }
+
+    protected virtual (float timeMult, float amountMult) GetSkillImpact()
+    {
+        if (villager == null || villager.villagerData == null)
+            return (1f, 1f); // fallback, no effect
+
+        // Get this state's relevant skill
+        float skill = villager.villagerData.GetSkill(skillType);
+
+        // Normalize to 0–1
+        float t = Mathf.Clamp01(skill / 100f);
+
+        // Apply an easing function (ease-out cubic) rapid gains at low skill, diminishing returns later
+        float curved = 1f - Mathf.Pow(1f - t, 3f);
+
+        // Map to your desired ranges:
+        float timeMult = Mathf.Lerp(1.5f, 0.5f, curved);
+
+        // Amount multiplier:
+        float amountMult = Mathf.Lerp(0.5f, 2.0f, curved);
+
+        return (timeMult, amountMult);
     }
 }

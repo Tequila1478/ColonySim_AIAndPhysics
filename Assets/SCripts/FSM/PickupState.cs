@@ -20,7 +20,7 @@ public class PickupState : VillagerStateBase
     }
 
 
-    public override void Exit()
+    public override void OnExit()
     {
         if (villager.agent != null)
         {

@@ -6,6 +6,11 @@ TagManager:
   tags:
   - Resource_Food
   - Villager
+  - ResourceDropOff
+  - LumberDropOff
+  - FoodDropOff
+  - ResearchDropOff
+  - Building
   layers:
   - Default
   - TransparentFX
@@ -14,8 +19,8 @@ TagManager:
   - Water
   - UI
   - Villager
-  - 
-  - 
+  - Resource
+  - NoVillagerCollision
   - 
   - 
   - 

@@ -84,11 +84,11 @@ public class HealState : VillagerStateBase
             target.isSick = false;
         villager.villagerData.completedTaskRecently = true;
 
-        villager.SetRole(Villager_Role.Wander); // Reset healer's role
+        villager.SetRole(villager.villagerData.GetRandomRole()); // Reset healer's role
         target = null;
     }
 
-    public override void Exit()
+    public override void OnExit()
     {
         villager.agent.isStopped = false;
         isHealing = false;

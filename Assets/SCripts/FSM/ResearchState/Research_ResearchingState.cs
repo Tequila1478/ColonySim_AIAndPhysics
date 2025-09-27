@@ -32,13 +32,13 @@ public class Research_ResearchingState : IVillagerSubState
 
         yield return new WaitForSeconds(table.researchTime);
 
-        if (parent.researchCarried == 0)
-        {
-            parent.researchCarried = table.GatherResource(villager);
-        }
+        //if (parent.researchCarried == 0)
+        //{
+        //    parent.researchCarried = table.GatherResource(villager);
+        //}
 
         // gather research
-        parent.StartMoveTo(parent.researchDropOffLocation.gameObject);
+        //parent.StartMoveTo(parent.researchDropOffLocation.gameObject);
     }
 
     public void Execute()
@@ -48,13 +48,13 @@ public class Research_ResearchingState : IVillagerSubState
         if (timer >= (table.researchTime * MoodEffects.GetEffects(villager.villagerData.mood).workSpeedMultiplier))
         {
             // finish research
-            if (parent.researchCarried == 0)
-            {
-                parent.researchCarried = GetGatherAmount();
-            }
+           // if (parent.researchCarried == 0)
+           // {
+           //     parent.researchCarried = GetGatherAmount();
+           // }
 
             // move to drop-off
-            parent.StartMoveTo(parent.researchDropOffLocation.gameObject);
+            //parent.StartMoveTo(parent.researchDropOffLocation.gameObject);
         }
     }
 

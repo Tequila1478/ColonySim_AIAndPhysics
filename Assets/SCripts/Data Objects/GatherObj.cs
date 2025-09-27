@@ -10,6 +10,7 @@ public class GatherObj : MonoBehaviour, IRoleInteractable
     public float maxAmount = 100f;
     public float currentAmount = 100f;
     public bool isResourceDepot = false;
+    public GameObject resourcePrefab;
 
     public float GatherResource(float resourceAmount)
     {

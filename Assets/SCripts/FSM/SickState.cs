@@ -79,7 +79,7 @@ public class SickState : VillagerStateBase
         }
     }
 
-    public override void Exit()
+    public override void OnExit()
     {
         VillageData.Instance.RemoveSickVillager(villager.villagerData);
         villager.agent.enabled = true;

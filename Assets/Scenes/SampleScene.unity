@@ -514,9 +514,9 @@ GameObject:
   - component: {fileID: 59912732}
   - component: {fileID: 59912731}
   - component: {fileID: 59912733}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Village_FoodStore
-  m_TagString: Untagged
+  m_TagString: FoodDropOff
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -530,7 +530,7 @@ Transform:
   m_GameObject: {fileID: 59912729}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.739, y: 3.987, z: 0}
+  m_LocalPosition: {x: 3.25, y: 4.04, z: 0}
   m_LocalScale: {x: 1, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -566,7 +566,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -654,6 +654,7 @@ MonoBehaviour:
   gatherAmount: 10
   maxAmount: 1000
   currentAmount: 100
+  resourcePrefab: {fileID: 0}
 --- !u!1 &91988693
 GameObject:
   m_ObjectHideFlags: 0
@@ -688,7 +689,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   woodSources:
-  - {fileID: 1165523111}
+  - {fileID: 0}
   houseSite: {fileID: 1324960985}
   gatherTime: 3
   reachThreshold: 0.4
@@ -1144,6 +1145,79 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &270845297
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 421391371002301523, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_Distance
+      value: 3.6473508
+      objectReference: {fileID: 0}
+    - target: {fileID: 1075608668210005224, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.925271
+      objectReference: {fileID: 0}
+    - target: {fileID: 1075608668210005224, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -2.7060218
+      objectReference: {fileID: 0}
+    - target: {fileID: 1075608668210005224, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1075608668210005224, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1075608668210005224, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1075608668210005224, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1075608668210005224, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1075608668210005224, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1075608668210005224, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1075608668210005224, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2596054613825950248, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_Name
+      value: VIllager_WithGooglyEyes (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4341895066906895215, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: speedMultiplier
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4341895066906895215, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: 'skillLearnModifier.Array.data[0]'
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8195356150954778100, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_Distance
+      value: 3.6473508
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
 --- !u!1 &283474693
 GameObject:
   m_ObjectHideFlags: 0
@@ -1230,7 +1304,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 47.05
+  m_fontSize: 18
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -2080,7 +2154,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: State
+  m_text: 'Mood
+
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2107,7 +2183,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 47.25
+  m_fontSize: 18
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -2383,7 +2459,7 @@ GameObject:
   - component: {fileID: 520246827}
   - component: {fileID: 520246826}
   - component: {fileID: 520246828}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Village_Researchtable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2435,7 +2511,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -2522,235 +2598,7 @@ MonoBehaviour:
   researchAmount: 10
   tableMinX: {x: 0, y: 0, z: 0}
   tableMaxX: {x: 0, y: 0, z: 0}
---- !u!1 &588376714
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 588376721}
-  - component: {fileID: 588376720}
-  - component: {fileID: 588376719}
-  - component: {fileID: 588376718}
-  - component: {fileID: 588376717}
-  - component: {fileID: 588376716}
-  - component: {fileID: 588376715}
-  m_Layer: 6
-  m_Name: Villager (2)
-  m_TagString: Villager
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &588376715
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 588376714}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e7de7e1e7169a140b927bbd34df770d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  role: 8
-  villagerData: {fileID: 0}
-  state: 
-  startOnAwake: 1
-  reachThreshold: 0.4
-  animator: {fileID: 0}
-  moveBool: isMoving
-  wanderRadius: 8
-  minIdleTime: 1
-  maxIdleTime: 4
-  sampleAttempts: 30
-  coolDownTimeOnEat: 60
-  canTryEat: 1
-  eatCooldown: 0
-  isBeingHealed: 0
-  agent: {fileID: 0}
-  fsm: {fileID: 0}
-  homePosition: {x: 0, y: 0, z: 0}
---- !u!114 &588376716
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 588376714}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51a8a6b306e370643865c339ea626c4f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  villager: {fileID: 0}
---- !u!114 &588376717
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 588376714}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec97578f6355a7945963326afca71d8f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isSick: 0
-  happiness: 100
-  mood: 4
-  gatherType: food
-  role: 8
-  hunger: 49
-  hungerRate: 100
-  health: 40
-  speedMultiplier: 2
-  sickModifier: 1
-  isDead: 0
-  workChanceMultiplier: 1
-  energy: 10
-  recoveryRate: 1
-  wakeUpChance: 0
-  failedTaskRecently: 0
-  completedTaskRecently: 0
-  sleptRecently: 0
-  socialisedRecently: 0
-  hasEatenRecently: 0
-  wasPickedupRecently: 0
-  startingSkills: 01000000010000000a00000001000000
-  skillLearnModifier: 01000000010000000100000001000000
---- !u!70 &588376718
-CapsuleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 588376714}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 1, y: 2}
-  m_Direction: 0
---- !u!195 &588376719
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 588376714}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 0.5
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 1
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
---- !u!212 &588376720
-SpriteRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 588376714}
-  m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 0
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 10
-  m_Sprite: {fileID: -9095717837082945937, guid: 207ee8102dd4143d288186ef0be518ee, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
-  m_FlipY: 0
-  m_DrawMode: 0
-  m_Size: {x: 1, y: 2}
-  m_AdaptiveModeThreshold: 0.5
-  m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
---- !u!4 &588376721
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 588376714}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.21, y: -1.93, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.25, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  researchPrefab: {fileID: 3556276912398488754, guid: 147ea261f977091499c3b4c242ba1a40, type: 3}
 --- !u!1 &603185439
 GameObject:
   m_ObjectHideFlags: 0
@@ -2838,7 +2686,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 53.6
+  m_fontSize: 18
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -2974,235 +2822,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &685611478
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 685611485}
-  - component: {fileID: 685611484}
-  - component: {fileID: 685611483}
-  - component: {fileID: 685611482}
-  - component: {fileID: 685611481}
-  - component: {fileID: 685611480}
-  - component: {fileID: 685611479}
-  m_Layer: 6
-  m_Name: Villager (1)
-  m_TagString: Villager
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &685611479
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 685611478}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e7de7e1e7169a140b927bbd34df770d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  role: 1
-  villagerData: {fileID: 0}
-  state: 
-  startOnAwake: 1
-  reachThreshold: 0.4
-  animator: {fileID: 0}
-  moveBool: isMoving
-  wanderRadius: 8
-  minIdleTime: 1
-  maxIdleTime: 4
-  sampleAttempts: 30
-  coolDownTimeOnEat: 60
-  canTryEat: 1
-  eatCooldown: 0
-  isBeingHealed: 0
-  agent: {fileID: 0}
-  fsm: {fileID: 0}
-  homePosition: {x: 0, y: 0, z: 0}
---- !u!114 &685611480
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 685611478}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51a8a6b306e370643865c339ea626c4f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  villager: {fileID: 0}
---- !u!114 &685611481
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 685611478}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec97578f6355a7945963326afca71d8f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isSick: 1
-  happiness: 100
-  mood: 4
-  gatherType: food
-  role: 1
-  hunger: 49
-  hungerRate: 100
-  health: 40
-  speedMultiplier: 2
-  sickModifier: 1
-  isDead: 0
-  workChanceMultiplier: 1
-  energy: 100
-  recoveryRate: 1
-  wakeUpChance: 0
-  failedTaskRecently: 0
-  completedTaskRecently: 0
-  sleptRecently: 0
-  socialisedRecently: 0
-  hasEatenRecently: 0
-  wasPickedupRecently: 0
-  startingSkills: 01000000010000000a00000001000000
-  skillLearnModifier: 01000000010000000100000001000000
---- !u!70 &685611482
-CapsuleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 685611478}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 1, y: 2}
-  m_Direction: 0
---- !u!195 &685611483
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 685611478}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 0.5
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 1
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
---- !u!212 &685611484
-SpriteRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 685611478}
-  m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 0
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 10
-  m_Sprite: {fileID: -9095717837082945937, guid: 207ee8102dd4143d288186ef0be518ee, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
-  m_FlipY: 0
-  m_DrawMode: 0
-  m_Size: {x: 1, y: 2}
-  m_AdaptiveModeThreshold: 0.5
-  m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
---- !u!4 &685611485
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 685611478}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.68, y: 1.71, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.25, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &701999914
 GameObject:
   m_ObjectHideFlags: 0
@@ -3215,7 +2834,7 @@ GameObject:
   - component: {fileID: 701999917}
   - component: {fileID: 701999916}
   - component: {fileID: 701999918}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Village_LumberSource
   m_TagString: Resource_Food
   m_Icon: {fileID: 0}
@@ -3231,7 +2850,7 @@ Transform:
   m_GameObject: {fileID: 701999914}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.51, y: -3.14, z: 0}
+  m_LocalPosition: {x: -3.81, y: -3.38, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3328,7 +2947,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 5
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.35706377, g: 0.57861626, b: 0.31842086, a: 1}
+  m_Color: {r: 0.44313726, g: 0.45882353, b: 0.25882354, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -3356,6 +2975,7 @@ MonoBehaviour:
   maxAmount: 100
   currentAmount: 8
   isResourceDepot: 0
+  resourcePrefab: {fileID: 3556276912398488754, guid: 147ea261f977091499c3b4c242ba1a40, type: 3}
 --- !u!1 &712313990
 GameObject:
   m_ObjectHideFlags: 0
@@ -3548,7 +3168,7 @@ MonoBehaviour:
   gatherSkill_Txt: {fileID: 925536344}
   hunger_Txt: {fileID: 1327198277}
   roleDropdown: {fileID: 1399212006}
-  State_Txt: {fileID: 502332062}
+  Mood_Txt: {fileID: 502332062}
 --- !u!1 &731018278
 GameObject:
   m_ObjectHideFlags: 0
@@ -3561,7 +3181,7 @@ GameObject:
   - component: {fileID: 731018281}
   - component: {fileID: 731018280}
   - component: {fileID: 731018282}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Village_Hospital
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3698,6 +3318,103 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healDuration: 10
   healAmount: 10
+--- !u!1001 &742222398
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 421391371002301523, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_Distance
+      value: 4.576581
+      objectReference: {fileID: 0}
+    - target: {fileID: 1075608668210005224, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 4.079953
+      objectReference: {fileID: 0}
+    - target: {fileID: 1075608668210005224, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.5459217
+      objectReference: {fileID: 0}
+    - target: {fileID: 1075608668210005224, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1075608668210005224, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1075608668210005224, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1075608668210005224, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1075608668210005224, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1075608668210005224, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1075608668210005224, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1075608668210005224, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2596054613825950248, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_Name
+      value: VIllager_WithGooglyEyes (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4086277462243772689, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: role
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4341895066906895215, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: role
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4341895066906895215, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: gatherType
+      value: food
+      objectReference: {fileID: 0}
+    - target: {fileID: 4341895066906895215, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: hungerRate
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 4341895066906895215, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: recoveryRate
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4341895066906895215, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: 'startingSkills.Array.data[0]'
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4341895066906895215, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: 'startingSkills.Array.data[2]'
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4341895066906895215, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: 'skillLearnModifier.Array.data[2]'
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8195356150954778100, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_Distance
+      value: 4.576581
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
 --- !u!1 &748028398
 GameObject:
   m_ObjectHideFlags: 0
@@ -3908,7 +3625,6 @@ Transform:
   - {fileID: 520246825}
   - {fileID: 1324960985}
   - {fileID: 731018279}
-  - {fileID: 1165523111}
   - {fileID: 2060114316}
   - {fileID: 894778171}
   - {fileID: 701999915}
@@ -4140,7 +3856,7 @@ GameObject:
   - component: {fileID: 894778173}
   - component: {fileID: 894778172}
   - component: {fileID: 894778174}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Village_FoodSource
   m_TagString: Resource_Food
   m_Icon: {fileID: 0}
@@ -4156,7 +3872,7 @@ Transform:
   m_GameObject: {fileID: 894778170}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4.26, y: -3.14, z: 0}
+  m_LocalPosition: {x: 3.66, y: -3.14, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4281,6 +3997,7 @@ MonoBehaviour:
   maxAmount: 100
   currentAmount: 100
   isResourceDepot: 0
+  resourcePrefab: {fileID: 3556276912398488754, guid: 147ea261f977091499c3b4c242ba1a40, type: 3}
 --- !u!1 &925536342
 GameObject:
   m_ObjectHideFlags: 0
@@ -5378,7 +5095,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 44.5
+  m_fontSize: 18
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -5815,140 +5532,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1161893300}
   m_CullTransparentMesh: 1
---- !u!1 &1165523110
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1165523111}
-  - component: {fileID: 1165523113}
-  - component: {fileID: 1165523112}
-  m_Layer: 0
-  m_Name: Village_WoodSource
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1165523111
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1165523110}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -3.94, y: -3.9, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 832438962}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &1165523112
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1165523110}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
---- !u!212 &1165523113
-SpriteRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1165523110}
-  m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 0
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 5
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.44383317, g: 0.45911938, b: 0.2584351, a: 1}
-  m_FlipX: 0
-  m_FlipY: 0
-  m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
-  m_AdaptiveModeThreshold: 0.5
-  m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
 --- !u!1 &1217525974
 GameObject:
   m_ObjectHideFlags: 0
@@ -6034,7 +5617,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 53.6
+  m_fontSize: 18
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -6574,12 +6157,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4c122898c499d64d972936dc74268ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  resourcePrefab: {fileID: 3556276912398488754, guid: 147ea261f977091499c3b4c242ba1a40, type: 3}
   GameOver: 0
   villagerBaseSpeed: 0.5
   gameOverUI: {fileID: 1694546694}
   villagerCount: 2
   foodCount: 100
-  lumberCount: 0
+  lumberCount: 100
   researchCount: 0
   lumberStores: {fileID: 1421297803}
   foodStores: {fileID: 59912733}
@@ -6592,6 +6176,8 @@ MonoBehaviour:
   - {fileID: 1324960988}
   researchTable: {fileID: 520246828}
   currentBuilding: {fileID: 0}
+  looseResources: []
+  looseResearch: []
   allBeds:
   - {fileID: 455900450}
   hospitalObj: {fileID: 731018282}
@@ -6658,248 +6244,87 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb15b9e20cdad644a9188f5477112152, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &1293423803
-GameObject:
+--- !u!1001 &1259914773
+PrefabInstance:
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1293423810}
-  - component: {fileID: 1293423809}
-  - component: {fileID: 1293423808}
-  - component: {fileID: 1293423807}
-  - component: {fileID: 1293423806}
-  - component: {fileID: 1293423805}
-  - component: {fileID: 1293423804}
-  - component: {fileID: 1293423811}
-  m_Layer: 6
-  m_Name: Villager
-  m_TagString: Villager
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1293423804
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1293423803}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e7de7e1e7169a140b927bbd34df770d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  role: 0
-  villagerData: {fileID: 0}
-  state: 
-  startOnAwake: 1
-  reachThreshold: 0.4
-  animator: {fileID: 0}
-  moveBool: isMoving
-  wanderRadius: 8
-  minIdleTime: 1
-  maxIdleTime: 4
-  sampleAttempts: 30
-  coolDownTimeOnEat: 60
-  canTryEat: 1
-  eatCooldown: 0
-  isBeingHealed: 0
-  agent: {fileID: 0}
-  fsm: {fileID: 0}
-  homePosition: {x: 0, y: 0, z: 0}
---- !u!114 &1293423805
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1293423803}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51a8a6b306e370643865c339ea626c4f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  villager: {fileID: 0}
---- !u!114 &1293423806
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1293423803}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec97578f6355a7945963326afca71d8f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isSick: 0
-  happiness: 100
-  mood: 4
-  gatherType: lumber
-  role: 0
-  hunger: 100
-  hungerRate: 100
-  health: 100
-  speedMultiplier: 1
-  sickModifier: 1
-  isDead: 0
-  workChanceMultiplier: 1
-  energy: 100
-  recoveryRate: 1
-  wakeUpChance: 0
-  failedTaskRecently: 0
-  completedTaskRecently: 0
-  sleptRecently: 0
-  socialisedRecently: 0
-  hasEatenRecently: 0
-  wasPickedupRecently: 0
-  startingSkills: 02000000010000000100000001000000
-  skillLearnModifier: 01000000010000000100000001000000
---- !u!70 &1293423807
-CapsuleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1293423803}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 1, y: 2}
-  m_Direction: 0
---- !u!195 &1293423808
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1293423803}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 0.5
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 1
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
---- !u!212 &1293423809
-SpriteRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1293423803}
-  m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 0
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 10
-  m_Sprite: {fileID: -9095717837082945937, guid: 207ee8102dd4143d288186ef0be518ee, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
-  m_FlipY: 0
-  m_DrawMode: 0
-  m_Size: {x: 1, y: 2}
-  m_AdaptiveModeThreshold: 0.5
-  m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
---- !u!4 &1293423810
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1293423803}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.51, y: 2.66, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.25, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1293423811
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1293423803}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 09359ec67a0e1d44ab06d878c41d7a22, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 421391371002301523, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_Distance
+      value: 2.8511424
+      objectReference: {fileID: 0}
+    - target: {fileID: 1075608668210005224, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -2.8073807
+      objectReference: {fileID: 0}
+    - target: {fileID: 1075608668210005224, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.02987845
+      objectReference: {fileID: 0}
+    - target: {fileID: 1075608668210005224, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1075608668210005224, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1075608668210005224, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1075608668210005224, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1075608668210005224, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1075608668210005224, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1075608668210005224, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1075608668210005224, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2596054613825950248, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_Name
+      value: VIllager_WithGooglyEyes (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4086277462243772689, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: role
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4341895066906895215, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: speedMultiplier
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4341895066906895215, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: 'startingSkills.Array.data[0]'
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4341895066906895215, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: 'startingSkills.Array.data[1]'
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8195356150954778100, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_Distance
+      value: 2.8511424
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
 --- !u!1 &1301161443
 GameObject:
   m_ObjectHideFlags: 0
@@ -6948,9 +6373,9 @@ GameObject:
   - component: {fileID: 1324960987}
   - component: {fileID: 1324960986}
   - component: {fileID: 1324960988}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Village_BuildHouse
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7000,7 +6425,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -7173,7 +6598,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 44.5
+  m_fontSize: 18
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -7376,7 +6801,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 68.5
+  m_fontSize: 18
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -7762,9 +7187,9 @@ GameObject:
   - component: {fileID: 1421297802}
   - component: {fileID: 1421297801}
   - component: {fileID: 1421297803}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Village_LumberStores
-  m_TagString: Untagged
+  m_TagString: LumberDropOff
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7778,7 +7203,7 @@ Transform:
   m_GameObject: {fileID: 1421297799}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.57, y: 3.987, z: 0}
+  m_LocalPosition: {x: -3.79, y: 0.04, z: 0}
   m_LocalScale: {x: 1, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7814,7 +7239,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -7902,6 +7327,7 @@ MonoBehaviour:
   gatherAmount: 10
   maxAmount: 99999
   currentAmount: 100
+  resourcePrefab: {fileID: 3556276912398488754, guid: 147ea261f977091499c3b4c242ba1a40, type: 3}
 --- !u!1 &1451014923
 GameObject:
   m_ObjectHideFlags: 0
@@ -8171,7 +7597,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: State
+  m_text: Mood
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -8198,7 +7624,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 47.25
+  m_fontSize: 18
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -8471,7 +7897,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 53.6
+  m_fontSize: 18
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -9305,7 +8731,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 51.45
+  m_fontSize: 18
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -9644,7 +9070,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 47.05
+  m_fontSize: 18
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -10227,9 +9653,9 @@ GameObject:
   - component: {fileID: 2060114318}
   - component: {fileID: 2060114317}
   - component: {fileID: 2060114319}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Village_ResearchDepot
-  m_TagString: Untagged
+  m_TagString: ResearchDropOff
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10279,7 +9705,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -10367,6 +9793,7 @@ MonoBehaviour:
   gatherAmount: 10
   maxAmount: 1000
   currentAmount: 100
+  resourcePrefab: {fileID: 0}
 --- !u!1 &2070916643
 GameObject:
   m_ObjectHideFlags: 0
@@ -10403,6 +9830,63 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 28}
   m_Pivot: {x: 0.5, y: 1}
+--- !u!1001 &3540319159372172945
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1075608668210005224, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.51
+      objectReference: {fileID: 0}
+    - target: {fileID: 1075608668210005224, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.66
+      objectReference: {fileID: 0}
+    - target: {fileID: 1075608668210005224, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1075608668210005224, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1075608668210005224, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1075608668210005224, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1075608668210005224, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1075608668210005224, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1075608668210005224, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1075608668210005224, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2596054613825950248, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
+      propertyPath: m_Name
+      value: VIllager_WithGooglyEyes
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 6ec9d48b600453648870d8eb0fc470b5, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -10416,11 +9900,12 @@ SceneRoots:
   - {fileID: 156904137}
   - {fileID: 91988699}
   - {fileID: 380538429}
-  - {fileID: 1293423810}
-  - {fileID: 685611485}
-  - {fileID: 588376721}
+  - {fileID: 3540319159372172945}
   - {fileID: 488550748}
   - {fileID: 45868681}
   - {fileID: 1259451125}
   - {fileID: 1254485169}
   - {fileID: 95132338}
+  - {fileID: 742222398}
+  - {fileID: 1259914773}
+  - {fileID: 270845297}

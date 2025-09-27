@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class VillageData : MonoBehaviour
 {
+    public GameObject resourcePrefab;
+
     public bool GameOver = false;
     public static VillageData Instance { get; private set; }
     [Header("Villager Settings")]
@@ -34,6 +36,9 @@ public class VillageData : MonoBehaviour
 
     public Dictionary<Villager, float> sickVillagers = new Dictionary<Villager, float>();
     public Dictionary<Villager, float> wanderingVillagers = new Dictionary<Villager, float>();
+    public List<ResourceObjData> looseResources = new List<ResourceObjData>();
+    public List<ResourceObjData> looseResearch = new List<ResourceObjData>();
+
 
     [Header("Bed settings")]
     public BedObj[] allBeds;
@@ -55,7 +60,12 @@ public class VillageData : MonoBehaviour
         allBeds ??= FindObjectsByType<BedObj>(FindObjectsSortMode.None);
 
 
-        UpdateNumberOfVillagers();
+        //UpdateNumberOfVillagers();
+    }
+
+    public void GetResourcePrefab(VillagerAI villager)
+    {
+
     }
 
     public void UpdateNumberOfVillagers()
@@ -71,20 +81,42 @@ public class VillageData : MonoBehaviour
         }
     }
 
+    public void AddToLooseResourceList(ResourceObjData rod)
+    {
+        looseResources.Add(rod);
+    }
+
+    public void RemoveFromLooseResourceList(ResourceObjData rod)
+    {
+        looseResources.Remove(rod);
+    }
+
+    public void AddToLooseResearchList(ResourceObjData rod)
+    {
+        looseResearch.Add(rod);
+    }
+
+    public void RemoveFromLooseResearchList(ResourceObjData rod)
+    {
+        looseResearch.Remove(rod);
+    }
+
     public void IncrementFood(float foodAmount)
     {
         foodCount += foodAmount;
+        foodCount = Mathf.Round(foodCount);
     }
 
     public void IncrementResearch(float researchAmount)
     {
         researchCount += researchAmount;
-        Debug.Log("Research updated!: " + researchAmount);
+        researchCount = Mathf.Round(researchCount);
     }
 
     public void IncrementLumber(float lumberAmount)
     {
-        lumberCount += lumberAmount;
+        lumberCount += lumberAmount; 
+        lumberCount = Mathf.Round(lumberCount);
     }
 
     #region Gather Data

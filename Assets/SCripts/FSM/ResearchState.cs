@@ -1,216 +1,208 @@
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class ResearchState : VillagerStateBase
 {
     public ResearchObj table;
-    public ResourceObj researchDropOffLocation;
+    public Transform dropOffLocation;
 
-    private IVillagerSubState currentSubState;
+    private GameObject spawnedResearch;
+    private bool isDelivering = false;
+    private Coroutine researchRoutine;
 
-    public float researchCarried;
+    private float researchAmount;
+    private float researchTime;
 
-    public ResearchState(VillagerAI villager) : base(villager) 
+
+    private enum PushState { Approaching, Pushing }
+    private PushState pushState = PushState.Approaching;
+
+    // Tuning parameters
+    public float pushGap = 0.04f;
+    public float approachThreshold = 0.12f;
+    public float spawnDistance = 0.5f; // distance from table
+    public float deliveryDistance = 0.5f; // distance to drop-off
+
+    public ResearchState(VillagerAI villager) : base(villager)
     {
         rate = -Mathf.Clamp(Mathf.Pow(0.5f, (villager.villagerData.GetSkill(VillagerSkills.Research) - 1) / 4f), 0.01f, 1f);
         skillType = VillagerSkills.Research;
         float skillLevel = villager.villagerData.GetSkill(skillType);
         levelUpRate = Mathf.Clamp(Mathf.Pow(0.5f, skillLevel / 5f), 0.0001f, 0.1f);
-
     }
-
 
     public override void Enter()
     {
         if (VillageData.Instance.researchTable == null || VillageData.Instance.ResearchDropOffLocation == null)
         {
             Debug.LogWarning("ResearchState: table or dropOffLocation not assigned.");
+            villager.SetRole(villager.villagerData.GetRandomRole());
             return;
         }
 
         table = VillageData.Instance.researchTable;
         table.InitialiseTable();
-        researchDropOffLocation = VillageData.Instance.ResearchDropOffLocation;
-        Debug.Log(researchDropOffLocation);
+        dropOffLocation = VillageData.Instance.ResearchDropOffLocation.transform;
 
-        StartMoveTo(table.gameObject);
+        if (VillageData.Instance.looseResearch.Count > 0)
+        {
+            // Pick the first available loose resource
+            spawnedResearch = VillageData.Instance.looseResearch[0].gameObject;
+            spawnedResearch.GetComponent<ResourceObjData>().UpdateOwnerState(villager.gameObject);
+
+            var resourceData = spawnedResearch.GetComponent<ResourceObjData>();
+           
+            isDelivering = true;
+            pushState = PushState.Approaching;
+
+            return;
+        }
+
+        StartNextResearch();
+    }
+
+    public void StartNextResearch()
+    {        
+        isDelivering = false;
+        spawnedResearch = null;
+        pushState = PushState.Approaching;
     }
 
     protected override void OnExecute()
     {
-        currentSubState?.Execute();
+        // Go to resource point and start gathering
+        if (!isDelivering)
+        {
+            Vector3 tableLocation = table.GetRandomPosAtTable();
+            MoveTowards(table.GetRandomPosAtTable(), moveSpeed);
+            float distToNode = Vector2.Distance(villager.transform.position, tableLocation);
+
+            Debug.DrawLine(villager.transform.position, tableLocation, Color.yellow); // villager → resource
+
+            if (distToNode < villager.reachThreshold)
+            {
+                if (researchRoutine == null)
+                {
+                    Debug.Log($"[ResearchState] Reached resource. Starting research coroutine.");
+                    researchRoutine = villager.StartCoroutine(ResearchRoutine());
+                }
+            }
+            return;
+        }
+
+        if (isDelivering && spawnedResearch != null)
+        {
+            if (researchRoutine != null)
+            {
+                Debug.Log($"[GatherState] Stopping gather routine (delivery phase).");
+                villager.StopCoroutine(researchRoutine);
+                researchRoutine = null;
+            }
+
+            Vector2 resourcePos = spawnedResearch.transform.position;
+            Vector2 dropPos = dropOffLocation.position;
+            Vector2 dirToDrop = (dropPos - resourcePos).normalized;
+            float villagerRadius = ApproxColliderRadius(villager.gameObject);
+            float resourceRadius = ApproxColliderRadius(spawnedResearch.gameObject);
+            Vector2 pushPos = resourcePos - dirToDrop * (villagerRadius + resourceRadius + pushGap);
+            Vector2 villagerPos = villager.transform.position;
+
+            // Visual debugging: path to drop-off and push target
+            Debug.DrawLine(resourcePos, dropPos, Color.blue); // resource → drop-off
+            Debug.DrawRay(dropPos, Vector2.up * 0.3f, Color.magenta); // drop-off marker
+            Debug.DrawLine(villagerPos, pushPos, Color.cyan); // villager → pushPos
+
+
+            switch (pushState)
+            {
+                case PushState.Approaching:
+                    MoveTowards(pushPos, villager.agent.speed);
+                    if (Vector2.Distance(villagerPos, pushPos) <= approachThreshold)
+                        pushState = PushState.Pushing;
+                    break;
+
+                case PushState.Pushing:
+                    Rigidbody2D villagerRb = villager.GetComponent<Rigidbody2D>();
+                    if (villagerRb != null)
+                        villagerRb.linearVelocity = dirToDrop * villager.agent.speed;
+
+                    Vector2 villagerToResource = (resourcePos - villagerPos).normalized;
+                    float alignment = Vector2.Dot(villagerToResource, dirToDrop);
+                    if (alignment < 0.99f)
+                    {
+                        pushState = PushState.Approaching;
+                        if (villagerRb != null) villagerRb.linearVelocity = Vector2.zero;
+                    }
+                    break;
+            }
+        }
+
+        else if (isDelivering && spawnedResearch == null)
+        {
+            isDelivering = false;
+            pushState = PushState.Approaching;
+            StartNextResearch();
+            return;
+        }
     }
 
-    public override void Exit()
+    public override void OnExit()
     {
-        currentSubState?.Exit();
-    }
-    public void StartMoveTo(GameObject location)
-    {
-        SwitchSubState(new Research_MoveState(this, villager, location));
-    }
-    public void SwitchSubState(IVillagerSubState newState)
-    {
-        currentSubState?.Exit();
-        currentSubState = newState;
-        currentSubState.Enter();
+        var rb = villager.GetComponent<Rigidbody2D>();
+        if (rb != null) rb.linearVelocity = Vector2.zero;
+        if (spawnedResearch != null)
+        {
+            GameObject.Destroy(spawnedResearch.gameObject);
+            spawnedResearch = null;
+        }
     }
 
-    // Helpers for sub-states
-    public void StartResearching()
+
+    public override void OnResourceDelivered()
     {
-        SwitchSubState(new Research_ResearchingState(this, villager, table));
-    }
-
-    public void StartDelivering()
-    {
-        SwitchSubState(new Research_DeliverResearchState(this, villager, researchDropOffLocation, ref researchCarried));
-    }
-
-    public override void OnDropped()
-    {
-        currentSubState?.Exit();
-        villager.SetRole(villager.villagerData.GetRandomRole());
-    }
-
-}
-
-
-/*
-using System.Collections;
-using UnityEngine;
-using UnityEngine.AI;
-
-public class ResearchState : IVillagerState
-{
-    private VillagerAI villager;
-
-    private ResearchObj table;
-    private ResourceObj researchDropOffLocation;
-
-    private bool atTable = false;
-    private bool carryingResearch = false;
-    private float researchCarried;
-
-    private Vector3 tableTargetPosition;
-    private Vector3 currentMoveLocation;
-
-
-    public ResearchState(VillagerAI villager)
-    {
-        this.villager = villager;
-    }
-
-    public void Enter()
-    {
-       if (VillageData.Instance.researchTable == null || VillageData.Instance.ResearchDropOffLocation == null)
-       {
-           Debug.LogWarning("ResearchState: table or dropOffLocation not assigned.");
-           return;
-       }
-            table = VillageData.Instance.researchTable;
-            table.InitialiseTable();
-            researchDropOffLocation = VillageData.Instance.ResearchDropOffLocation;
-
-            StartResearching();
-    }
-
-    public void StartResearching()
-    {
+        Debug.Log($"[ResearchState] Resource delivered successfully.");
+        spawnedResearch = null;
+        villager.villagerData.completedTaskRecently = true;
         StartNextResearch();
     }
 
-    private void StartNextResearch()
+    private IEnumerator ResearchRoutine()
     {
-        // pick random X along table bounds
-        float randomX = Random.Range(table.tableMinX.x, table.tableMaxX.x);
-        // set Y to table's minimum Y, Z stays the same
-        float yPos = table.tableMinX.y; // always use bounds.min.y
-        tableTargetPosition = new Vector3(randomX, yPos, table.tableMinX.z);
+        GatherResource();
+        yield return new WaitForSeconds(researchTime);
 
-        currentMoveLocation = tableTargetPosition;
-        atTable = false;
+        // Calculate random spawn offset outside the node's collider
+        float nodeRadius = ApproxColliderRadius(table.gameObject);
+        float spawnDistanceFromNode = nodeRadius + 0.5f; // small extra gap
+        float angle = Random.Range(0f, 360f) * Mathf.Deg2Rad;
+        Vector2 offset = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * spawnDistanceFromNode;
 
-        MoveTo(currentMoveLocation);
-    }
+        Vector2 spawnPosition = villager.transform.position;
 
-    private IEnumerator ResearchAtTable()
-    {
-        atTable = true;
-        villager.agent.isStopped = true; // pause agent while researching
-        // play research animation here
-        yield return new WaitForSeconds(table.researchTime);
-        if (!carryingResearch)
-        {
-            carryingResearch = true;
-            researchCarried = table.GatherResource(villager);
-        }
-        // move to store
-        currentMoveLocation = researchDropOffLocation.transform.position;
+        spawnedResearch = GameObject.Instantiate(table.researchPrefab, spawnPosition, Quaternion.identity);
+        spawnedResearch.GetComponent<ResourceObjData>().Init("research", researchAmount, villager.gameObject);
+
+        isDelivering = true;
+        pushState = PushState.Approaching;
         villager.agent.isStopped = false;
-        MoveTo(currentMoveLocation);
-        yield break;
     }
 
-    private IEnumerator DeliverResearch()
+    public void GatherResource()
     {
-        villager.agent.isStopped = true;
-        yield return new WaitForSeconds(researchDropOffLocation.gatherTime);
 
-        if (carryingResearch)
-        {
-            carryingResearch = false;
-            VillageData.Instance.IncrementResearch(researchCarried);
-            researchCarried = 0;
-        }
-        villager.agent.isStopped = false;
-        //Loop back to table
-        StartNextResearch();
+        (float timeMult, float amountMult) = GetSkillImpact();
+        researchAmount = table.researchAmount * amountMult * MoodEffects.GetEffects(villager.villagerData.mood).workEfficiencyMultiplier;
+        researchTime = table.researchTime * timeMult * MoodEffects.GetEffects(villager.villagerData.mood).workSpeedMultiplier;
 
-        yield break;
     }
 
 
-    public void Execute()
+    private float ApproxColliderRadius(GameObject go)
     {
-       if (villager.agent.pathPending) return;
-
-       // arrived at table target -> start researching
-       if (!atTable && !carryingResearch &&
-           villager.agent.remainingDistance <= Mathf.Max(villager.agent.stoppingDistance, villager.reachThreshold))
-       {
-           villager.agent.isStopped = true;
-           villager.StartCoroutine(ResearchAtTable());
-       }
-
-       // arrived at store -> deliver and loop
-       if (carryingResearch &&
-           villager.agent.remainingDistance <= Mathf.Max(villager.agent.stoppingDistance, villager.reachThreshold))
-       {
-           villager.StartCoroutine(DeliverResearch());
-       }
+        var col = go.GetComponent<Collider2D>();
+        if (col == null) return 0.5f;
+        return Mathf.Max(col.bounds.extents.x, col.bounds.extents.y);
     }
 
-public void Exit()
-{
-   // make sure agent is moving if we exit mid-action
-   villager.agent.isStopped = false;
 }
-
-
-private void MoveTo(Vector3 pos)
-{
-   if (NavMesh.SamplePosition(pos, out NavMeshHit hit, 3f, NavMesh.AllAreas))
-   {
-       villager.agent.SetDestination(hit.position);
-       if (villager.animator != null) villager.animator.SetBool(villager.moveBool, true);
-   }
-   else
-   {
-       Debug.LogWarning("ResearchState.MoveTo: target not on NavMesh, using table center.");
-       villager.agent.SetDestination(table.transform.position);
-   }
-}
-
-}
-*/

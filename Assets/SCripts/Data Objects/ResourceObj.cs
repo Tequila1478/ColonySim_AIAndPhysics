@@ -8,6 +8,7 @@ public class ResourceObj : MonoBehaviour, IRoleInteractable
     public float gatherAmount = 10f;
     public float maxAmount = 1000;
     public float currentAmount = 100f;
+    public GameObject resourcePrefab;
 
     public float GatherResource(float resourceAmount)
     {

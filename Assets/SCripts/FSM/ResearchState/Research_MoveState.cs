@@ -55,11 +55,11 @@ public class Research_MoveState : IVillagerSubState
             if (villager.agent.hasPath && !villager.agent.pathPending &&
                 villager.agent.remainingDistance <= Mathf.Max(villager.agent.stoppingDistance, villager.reachThreshold))
             {
-                if (table != null)
-                    parent.StartResearching();
+               // if (table != null)
+                   // parent.StartResearching();
 
-                else if (resourceStore != null)
-                    parent.StartDelivering();
+                //else if (resourceStore != null)
+                   // parent.StartDelivering();
             }
         }
     }

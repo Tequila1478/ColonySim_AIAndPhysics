@@ -15,7 +15,7 @@ public class VillagerAI : MonoBehaviour
 
     [Header("General")]
     public bool startOnAwake = true;
-    public float reachThreshold = 0.4f;
+    public float reachThreshold = 0.52f;
 
     [Header("Animator (Optional)")]
     public Animator animator;
@@ -158,10 +158,22 @@ public class VillagerAI : MonoBehaviour
 
     public void SetRole(Villager_Role newRole, bool forced = false)
     {
-        if (!forced && fsm.currentState != null && !fsm.currentState.CanChangeRole)
+        if (newRole == Villager_Role.Dead || newRole == Villager_Role.PickedUp)
+        {
+            role = newRole;
+            villagerData.role = newRole;
+
+            TryChangeMood();
+            return;
+        }
+        else if (!forced && fsm.currentState != null && !fsm.currentState.CanChangeRole)
             return;
 
-        if (newRole == Villager_Role.Eat && !canTryEat && !forced)
+        else if (newRole == Villager_Role.Eat && !canTryEat && !forced)
+            return;
+
+        //if trying to change to sick, from sleep. Dont;
+        else if (newRole == Villager_Role.Sick && role == Villager_Role.Sleep)
             return;
 
         role = newRole;
@@ -391,6 +403,14 @@ public class VillagerAI : MonoBehaviour
         {
             Debug.LogWarning($"{name}: Target not on NavMesh: {target}");
             return false;
+        }
+    }
+
+    public void OnResourceDelivered()
+    {
+        if (fsm.currentState != null)
+        {
+            fsm.currentState.OnResourceDelivered();
         }
     }
 

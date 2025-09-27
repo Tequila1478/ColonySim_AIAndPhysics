@@ -9,6 +9,8 @@ public class ResearchObj : MonoBehaviour, IRoleInteractable
     public Vector3 tableMinX;
     public Vector3 tableMaxX;
 
+    public GameObject researchPrefab;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public float GatherResource(VillagerAI villager)
     {
@@ -21,14 +23,20 @@ public class ResearchObj : MonoBehaviour, IRoleInteractable
         BoxCollider2D col = GetComponent<BoxCollider2D>();
         if (col != null)
         {
-            tableMinX = new Vector3(col.bounds.min.x, transform.position.y, col.bounds.center.z);
-            tableMaxX = new Vector3(col.bounds.max.x, transform.position.y, col.bounds.center.z);
+            tableMinX = new Vector3(col.bounds.min.x, col.bounds.min.y, col.bounds.center.z);
+            tableMaxX = new Vector3(col.bounds.max.x, col.bounds.max.y, col.bounds.center.z);
         }
         else
         {
             Debug.Log("Help");// fallback: just use table position if no collider
             tableMinX = tableMaxX = transform.position;
         }
+    }
+
+    public Vector3 GetRandomPosAtTable()
+    {
+        float randomX = Random.Range(tableMinX.x, tableMaxX.x);
+        return new Vector3(randomX, tableMinX.y, tableMinX.z);
     }
 
     public void OnVillagerDropped(VillagerAI villager)
