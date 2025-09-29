@@ -178,7 +178,16 @@ public class BuildState : VillagerStateBase
 
     private IEnumerator GatherRoutine()
     {
+        StartWorkingAnimation();
         GatherResource();
+
+
+        if (gatherAmount <= 0)
+        {
+            villager.SetRole(villager.villagerData.GetRandomRole());
+
+            yield break; // exit coroutine, don't spawn a resource
+        }
 
         yield return new WaitForSeconds(gatherTime);
 
@@ -197,10 +206,12 @@ public class BuildState : VillagerStateBase
         isDelivering = true;
         pushState = PushState.Approaching;
         villager.agent.isStopped = false;
+        EndWorkingAnimation();
     }
 
     private IEnumerator BuildRoutine()
     {
+        StartWorkingAnimation();
         Vector2 nodePos = building.transform.position;
 
         // Move to building first
@@ -222,6 +233,7 @@ public class BuildState : VillagerStateBase
         villager.villagerData.completedTaskRecently = true;
         building.ConstructBuilding(gatherAmount);
 
+        EndWorkingAnimation();
         StartNextTask();
     }
 
@@ -239,8 +251,15 @@ public class BuildState : VillagerStateBase
         (float timeMult, float amountMult) = GetSkillImpact();
         gatherAmount = targetNode.gatherAmount * amountMult * MoodEffects.GetEffects(villager.villagerData.mood).workEfficiencyMultiplier;
         gatherTime = targetNode.gatherTime * timeMult * MoodEffects.GetEffects(villager.villagerData.mood).workSpeedMultiplier;
+        
+        gatherAmount = targetNode.GatherResource(gatherAmount);
 
-        targetNode.GatherResource(gatherAmount);
+        if (gatherAmount <= 0)
+        {
+            EndWorkingAnimation();
+            FailedTaskAnimation();
+            villager.SetRole(villager.villagerData.GetRandomRole());
+        }
     }
 
     private float ApproxColliderRadius(GameObject go)

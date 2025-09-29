@@ -132,7 +132,6 @@ GameObject:
   - component: {fileID: 964585047783956956}
   - component: {fileID: 4086277462243772689}
   - component: {fileID: 3811968569956572278}
-  - component: {fileID: 2985187696470548825}
   m_Layer: 6
   m_Name: Villager
   m_TagString: Villager
@@ -306,6 +305,8 @@ MonoBehaviour:
   socialisedRecently: 0
   hasEatenRecently: 0
   wasPickedupRecently: 0
+  isGoingToSocialise: 0
+  isBeingSocialised: 0
   startingSkills: 02000000010000000100000001000000
   skillLearnModifier: 01000000010000000100000001000000
 --- !u!114 &964585047783956956
@@ -338,7 +339,7 @@ MonoBehaviour:
   state: 
   startOnAwake: 1
   reachThreshold: 0.4
-  animator: {fileID: 0}
+  animator: {fileID: 2233049637857951053}
   moveBool: isMoving
   wanderRadius: 8
   minIdleTime: 1
@@ -351,6 +352,7 @@ MonoBehaviour:
   agent: {fileID: 0}
   fsm: {fileID: 0}
   homePosition: {x: 0, y: 0, z: 0}
+  beingSocialised: 0
 --- !u!50 &3811968569956572278
 Rigidbody2D:
   serializedVersion: 5
@@ -378,28 +380,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!95 &2985187696470548825
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1524754777583802811}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 9f836681bc5733d4f8ff8f44baa494c3, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &2596054613825950248
 GameObject:
   m_ObjectHideFlags: 0
@@ -409,6 +389,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1075608668210005224}
+  - component: {fileID: 4382586813819125478}
+  - component: {fileID: 2233049637857951053}
   m_Layer: 0
   m_Name: VIllager_WithGooglyEyes
   m_TagString: Untagged
@@ -435,6 +417,45 @@ Transform:
   - {fileID: 374453675575524216}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!111 &4382586813819125478
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2596054613825950248}
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Animation: {fileID: 7400000, guid: 9040c4ae4414fc04294a7abfab0d0048, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 9040c4ae4414fc04294a7abfab0d0048, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_UpdateMode: 0
+  m_CullingType: 0
+--- !u!95 &2233049637857951053
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2596054613825950248}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 79c3ff728f6f1a84cafc4f19888d0570, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &3167400946985340728
 GameObject:
   m_ObjectHideFlags: 0
@@ -990,7 +1011,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 100
-  m_Sprite: {fileID: 660583725652869240, guid: c12ccad02b4a14c499d85eec4e3c4ce2, type: 3}
+  m_Sprite: {fileID: 800639088518329584, guid: f1cfc55a197745e47ae36434de140313, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

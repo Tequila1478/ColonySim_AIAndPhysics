@@ -70,6 +70,7 @@ public class SleepState : VillagerStateBase
 
     private IEnumerator SleepCoroutine()
     {
+        StartSleepAnimation();
         //Debugging purpoises
         if (villager == null)
         {
@@ -140,7 +141,7 @@ public class SleepState : VillagerStateBase
 
     private void WakeUp()
     {
-
+        EndSleepAnimation();
         isSleeping = false;
 
         if (villager.animator != null)

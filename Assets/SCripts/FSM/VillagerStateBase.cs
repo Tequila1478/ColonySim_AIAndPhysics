@@ -1,3 +1,4 @@
+using NUnit.Framework.Internal;
 using UnityEngine;
 
 public abstract class VillagerStateBase
@@ -12,6 +13,7 @@ public abstract class VillagerStateBase
     public float rate = 0.001f;
     public float levelUpRate = 0f;
     public VillagerSkills skillType = VillagerSkills.Heal;
+    public  bool idlingTogether = false;
 
     public virtual bool CanChangeRole => true;
 
@@ -50,7 +52,10 @@ public abstract class VillagerStateBase
         OnExit();
     }
 
-    public virtual void OnExit() { }
+    public virtual void OnExit() 
+    {
+        EndThinkingAnimation();
+    }
 
     // Default pickup/drop behavior
 
@@ -101,6 +106,7 @@ public abstract class VillagerStateBase
     }
     public virtual void OnPickUp()
     {
+        villager.animator.SetTrigger("PickedUp");
         villager.SetRole(Villager_Role.PickedUp, forced: true);
     }
 
@@ -161,4 +167,82 @@ public abstract class VillagerStateBase
 
         return (timeMult, amountMult);
     }
+
+    #region Animations
+
+    public void StartWorkingAnimation()
+    {
+        villager.animator.SetBool("isWorking", true);
+    }
+
+    public void EndWorkingAnimation()
+    {
+        villager.animator.SetBool("isWorking", false);
+    }
+    
+    public void StartSleepAnimation()
+    {
+        villager.animator.SetBool("isSleeping", true) ;
+    }
+
+    public void EndSleepAnimation()
+    {
+        villager.animator.SetBool("isSleeping", false) ;
+    }
+
+    public void FailedTaskAnimation()
+    {
+        villager.animator.SetTrigger("FailedTask");
+    }
+
+    public void EmoteAnimation()
+    {
+        int emotion = Random.Range(0, 3);
+
+        villager.animator.SetInteger("Emotion", emotion);
+        villager.animator.SetTrigger("Emoting");
+        
+    }
+    public void StartThinkingAnimation()
+    {
+        villager.animator.SetBool("isThinking", true);
+
+    }
+
+    public void EndThinkingAnimation()
+    {
+        villager.animator.SetBool("isThinking", false);
+    }
+
+    public void ChangeMoodAnimation(string mood)
+    {
+        int state = 0;
+
+        switch (mood)
+        {
+            case ("Happy"):
+                state = 0;
+                break;
+            case ("Angry"):
+                state = 1;
+                break;
+            case ("Neutral"):
+                state = 2;
+                break;
+            case ("Sad"):
+                state = 3;
+                break;
+            case ("Sleepy"):
+                state = 4;
+                break;
+
+        }
+
+
+        villager.animator.SetInteger("Mood", state);
+        villager.animator.SetTrigger("ChangeMood");
+
+    }
+
+    #endregion
 }

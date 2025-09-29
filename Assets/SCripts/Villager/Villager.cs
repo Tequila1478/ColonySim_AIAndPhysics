@@ -36,6 +36,9 @@ public class Villager : MonoBehaviour
     public bool hasEatenRecently = false;
     public bool wasPickedupRecently = false;
 
+    public bool isGoingToSocialise = false;
+    public bool isBeingSocialised = false;
+
 
     void Start()
     {

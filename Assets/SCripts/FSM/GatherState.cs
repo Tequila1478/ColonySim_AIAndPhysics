@@ -177,7 +177,16 @@ public class GatherState : VillagerStateBase
 
     private IEnumerator GatherRoutine()
     {
+        StartWorkingAnimation();
         GatherResource();
+
+        if (gatherAmount <= 0)
+        {
+            villager.SetRole(villager.villagerData.GetRandomRole());
+
+            yield break; // exit coroutine, don't spawn a resource
+        }
+
         yield return new WaitForSeconds(gatherTime);
 
 
@@ -194,7 +203,8 @@ public class GatherState : VillagerStateBase
 
         isDelivering = true;
         pushState = PushState.Approaching;
-        villager.agent.isStopped = false;
+        //villager.agent.isStopped = false;
+        EndWorkingAnimation();
 
     }
 
@@ -205,10 +215,19 @@ public class GatherState : VillagerStateBase
         gatherAmount = targetNode.gatherAmount * amountMult * MoodEffects.GetEffects(villager.villagerData.mood).workEfficiencyMultiplier;
         gatherTime = targetNode.gatherTime * timeMult * MoodEffects.GetEffects(villager.villagerData.mood).workSpeedMultiplier;
 
+        
+        gatherAmount = targetNode.GatherResource(gatherAmount);
 
+        if (gatherAmount <= 0)
+        {
+            EndWorkingAnimation();
+            FailedTaskAnimation();
+            villager.SetRole(villager.villagerData.GetRandomRole());
+        }
 
-        targetNode.GatherResource(gatherAmount);
         targetNode.incrementResource(-gatherAmount);
+
+
     }
 
     public override void OnResourceDelivered()

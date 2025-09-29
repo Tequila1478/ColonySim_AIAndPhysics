@@ -169,6 +169,7 @@ public class ResearchState : VillagerStateBase
 
     private IEnumerator ResearchRoutine()
     {
+        StartWorkingAnimation();
         GatherResource();
         yield return new WaitForSeconds(researchTime);
 
@@ -186,6 +187,7 @@ public class ResearchState : VillagerStateBase
         isDelivering = true;
         pushState = PushState.Approaching;
         villager.agent.isStopped = false;
+        EndWorkingAnimation();
     }
 
     public void GatherResource()

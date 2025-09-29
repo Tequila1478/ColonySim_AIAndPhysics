@@ -63,6 +63,7 @@ public class HealState : VillagerStateBase
                 villager.agent.isStopped = true;
                 healTimer = healDuration;
                 isHealing = true;
+                StartWorkingAnimation();
             }
         }
         else
@@ -86,6 +87,7 @@ public class HealState : VillagerStateBase
 
         villager.SetRole(villager.villagerData.GetRandomRole()); // Reset healer's role
         target = null;
+        EndWorkingAnimation();
     }
 
     public override void OnExit()

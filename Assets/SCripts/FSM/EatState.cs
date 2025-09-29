@@ -48,12 +48,13 @@ public class EatState : VillagerStateBase
         {
             
             villager.StartCoroutine(GatherResource());
-            
+
         }
     }
 
     private IEnumerator GatherResource()
     {
+        StartWorkingAnimation();
         if (isGathering) yield break;
         isGathering = true;
 
@@ -86,29 +87,31 @@ public class EatState : VillagerStateBase
         // If nothing was gathered (foodDepot empty)
         if (gatheredFood <= 0f)
         {
+            EndWorkingAnimation();
             Debug.Log("No Food available");
             villager.SetRole(Villager_Role.Wander);
             isGathering = false;
+            FailedTaskAnimation();
             yield break;
         }
 
         carryingResource = 0;
 
-            if(villager.villagerData.hunger >= 100)
+        if (villager.villagerData.hunger >= 100)
+        {
+            if (villager.villagerData.isSick)
             {
-                if (villager.villagerData.isSick)
-                {
-                    villager.SetRole(Villager_Role.Sick);
-                }
-                else
-                {
-                villager.villagerData.hasEatenRecently = true;
-                    villager.eatCooldown = 0;
-                    villager.SetRole(Villager_Role.Wander);
-
-                }
+                villager.SetRole(Villager_Role.Sick);
             }
-        
+            else
+            {
+                villager.villagerData.hasEatenRecently = true;
+                villager.eatCooldown = 0;
+                villager.SetRole(Villager_Role.Wander);
+
+            }
+        }
+
 
 
         currentMoveLocation = VillageData.Instance.GetDropOffLocation(villager.villagerData.gatherType);
@@ -116,6 +119,8 @@ public class EatState : VillagerStateBase
         villager.agent.isStopped = false;
 
         isGathering = false;
+
+        EndWorkingAnimation();
     }
 
 }

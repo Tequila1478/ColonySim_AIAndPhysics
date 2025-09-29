@@ -39,6 +39,10 @@ public class VillagerAI : MonoBehaviour
     [HideInInspector] public VillagerFSM fsm;
     [HideInInspector] public Vector3 homePosition;
 
+    public bool beingSocialised = false;
+
+    private bool wasMovingBeforeSocial = false;
+
 
 
     public MoodEffects currentMoodEffects;
@@ -158,6 +162,7 @@ public class VillagerAI : MonoBehaviour
 
     public void SetRole(Villager_Role newRole, bool forced = false)
     {
+        animator.SetTrigger("ChangedRole");
         if (newRole == Villager_Role.Dead || newRole == Villager_Role.PickedUp)
         {
             role = newRole;
@@ -280,7 +285,39 @@ public class VillagerAI : MonoBehaviour
 
         villagerData.mood = newMood;
         Debug.Log($"{name} mood changed from {oldMood} → {newMood}");
+        ChangeMoodAnimation(newMood.ToString());
         ApplyMoodEffects();
+
+    }
+
+
+    public void ChangeMoodAnimation(string mood)
+    {
+        int state = 0;
+
+        switch (mood)
+        {
+            case ("Happy"):
+                state = 0;
+                break;
+            case ("Angry"):
+                state = 1;
+                break;
+            case ("Neutral"):
+                state = 2;
+                break;
+            case ("Sad"):
+                state = 3;
+                break;
+            case ("Sleepy"):
+                state = 4;
+                break;
+
+        }
+
+
+        animator.SetInteger("Mood", state);
+        animator.SetTrigger("ChangeMood");
 
     }
 

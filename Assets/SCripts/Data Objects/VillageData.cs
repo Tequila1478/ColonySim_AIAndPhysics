@@ -260,7 +260,7 @@ public class VillageData : MonoBehaviour
         wanderingVillagers.Remove(stoppedWanderingVillager);
     }
 
-    public Villager GetWanderingVillager(Villager exclude = null)
+    public Villager GetWanderingVillager(Villager exclude = null, Villager exclude1 = null)
     {
         if (wanderingVillagers.Count == 0)
         {
@@ -268,7 +268,7 @@ public class VillageData : MonoBehaviour
         }
 
         var eligibleKeys = wanderingVillagers.Keys
-                        .Where(v => v != exclude)
+                        .Where(v => v != exclude && v != exclude1)
                         .ToList();
 
         if (eligibleKeys.Count == 0)

@@ -12,7 +12,7 @@ public class WanderState : VillagerStateBase
     private bool socialising = false;
     private bool idlingTogether = false;
 
-    private Villager socialTarget;       // villager being approached
+    private Villager socialTarget;       
     private VillagerAI socialTargetAI;
 
     public WanderState(VillagerAI villager) :base (villager) 
@@ -34,6 +34,16 @@ public class WanderState : VillagerStateBase
 
     protected override void OnExecute()
     {
+        if (villager.villagerData.isBeingSocialised)
+        {
+            // Don’t do anything while being socialised
+            villager.agent.isStopped = true;
+            return;
+        }
+        else
+        {
+            villager.agent.isStopped = false;
+        }
         if (socialising)
         {
             // Move toward social target
@@ -75,6 +85,7 @@ public class WanderState : VillagerStateBase
 
     private void StartWander()
     {
+        StartThinkingAnimation();
         wandering = true;
         socialising = false;
         idlingTogether = false;
@@ -90,6 +101,7 @@ public class WanderState : VillagerStateBase
             {
                 socialising = true;
                 wandering = false;
+                socialTarget.isBeingSocialised = true;
                 socialTargetAI.agent.isStopped = true; // target stops moving
                 target = socialTarget.transform.position;
                 villager.agent.SetDestination(target);
@@ -114,6 +126,7 @@ public class WanderState : VillagerStateBase
 
     private void StartIdleTogether()
     {
+        EndThinkingAnimation();
         socialising = false;
         idlingTogether = true;
         timer = 0f;
@@ -124,6 +137,7 @@ public class WanderState : VillagerStateBase
         if (villager.animator != null)
             villager.animator.SetBool(villager.moveBool, false);
 
+        socialTarget.isBeingSocialised = true;
         if (socialTargetAI != null)
         {
             socialTargetAI.agent.isStopped = true;
@@ -136,13 +150,19 @@ public class WanderState : VillagerStateBase
 
     private void EndIdleTogether()
     {
+        EndThinkingAnimation();
         idlingTogether = false;
 
         // Resume wandering for target
         if (socialTargetAI != null)
+        {
+            socialTargetAI.fsm.currentState.idlingTogether = false;
+            socialTarget.isBeingSocialised = false;
             socialTargetAI.agent.isStopped = false;
+        }
 
         // Pick next state for this villager
+        EmoteAnimation();
         PickNextState();
     }
 
